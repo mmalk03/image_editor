@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/cg-tornadofx.iml" filepath="$PROJECT_DIR$/cg-tornadofx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cg-tornadofx_main.iml" filepath="$PROJECT_DIR$/.idea/modules/cg-tornadofx_main.iml" group="cg-tornadofx" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cg-tornadofx_test.iml" filepath="$PROJECT_DIR$/.idea/modules/cg-tornadofx_test.iml" group="cg-tornadofx" />
     </modules>
   </component>
 </project>

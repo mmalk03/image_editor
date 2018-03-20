@@ -1,7 +1,7 @@
-package main.java.view
+package view
 
 import javafx.geometry.Orientation
-import main.java.viewmodel.MainViewModel
+import viewmodel.MainViewModel
 import tornadofx.*
 
 class MainView : View() {
@@ -30,26 +30,14 @@ class MainView : View() {
                         setOnAction { mainViewModel.onCloseImage() }
                     }
                 }
-                menu("Linear filters") {
-                    item("Inversion")
-                    item("Grayscale")
-                }
                 menu("Dithering") {
-                    menu("Random")
-                    item("Average")
-                    item("Ordered")
+                    item("Random").command = mainViewModel.ditheringRandomCommand
+                    item("Average").command = mainViewModel.ditheringAverageCommand
+                    item("Ordered").command = mainViewModel.ditheringOrderedCommand
                 }
                 menu("Quantization") {
                     item("Popularity")
-                    item("Median cut") {
-                        //                        action {
-//                            runAsync{
-//                                controller.loadText()
-//                            } ui { loadedText ->
-//                                textField.text = loadedText
-//                            }
-//                        }
-                    }
+                    item("Median cut")
                 }
             }
         }

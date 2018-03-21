@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.21'
+    ext.kotlin_version = '1.2.10'
 
     repositories {
         mavenLocal()
@@ -32,13 +32,13 @@ dependencies {
     compile 'com.authzee.kotlinguice4:kotlin-guice:1.0.0'
 }
 
-mainClassName = 'main.kotlin.MyApplication'
+mainClassName = 'MyApplication'
 
 jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': 'main.kotlin.MyApplication'
+                'Main-Class': 'MyApplication'
         )
     }
     from(configurations.compile.collect { entry -> zipTree(entry) }) {

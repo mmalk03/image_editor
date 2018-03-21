@@ -3,14 +3,21 @@ package model.filter.dithering
 import javafx.scene.image.Image
 import javafx.scene.paint.Color
 
-class OrderedDitheringFilterStrategy(grayLevel: Int) : DitheringFilterStrategy(grayLevel) {
-    override fun getColor(image: Image, i: Int, j: Int): Color {
-        TODO("implement")
-        //val grayscaleColor = grayscaleFilterStrategy.getColor(image, i, j)
-        //return getGrayValueForPixel(grayscaleColor)
-    }
+class OrderedDitheringFilterStrategy(grayLevel: Int,
+                                     private val ditherMatrixDimension: Int) : DitheringFilterStrategy(grayLevel) {
 
-    private fun getGrayValueForPixel(grayscaleColor: Color): Color {
-        return grayscaleColor
+    private val ditherMatrix: DitherMatrix = DitherMatrix.getBayerDitherMatrix(ditherMatrixDimension)
+
+
+    override fun getColor(image: Image, i: Int, j: Int): Color {
+        val intensity = grayscaleFilterStrategy.getIntensity(image, i, j)
+        val threshold = ditherMatrix.get(i % ditherMatrixDimension, j % ditherMatrixDimension)
+        val scaledThreshold = threshold.toDouble() / (ditherMatrixDimension * ditherMatrixDimension)
+
+        return if (intensity < scaledThreshold) {
+            Color.BLACK
+        } else {
+            Color.WHITE
+        }
     }
 }

@@ -18,10 +18,12 @@ class MainViewModel : ViewModel() {
     val doubleImage = DoubleImage()
 
     val grayLevel = SimpleIntegerProperty(2)
+    val grayLevels = FXCollections.observableArrayList(2, 4, 6, 8)
+    val ditherMatrixDimension = SimpleIntegerProperty(2)
+    val ditherMatrixDimensions = FXCollections.observableArrayList(2, 3, 4, 6)
+
     val originalImage = bind { doubleImage.originalImage }
     val filteredImage = bind { doubleImage.filteredImage }
-    val grayLevels = FXCollections.observableArrayList(2, 4, 6, 8)
-
 
     val ditheringRandomCommand = command {
         runAsync {
@@ -43,7 +45,7 @@ class MainViewModel : ViewModel() {
         runAsync {
             filteredImage.value = imageFilter.filter(
                     filteredImage.value,
-                    OrderedDitheringFilterStrategy(grayLevel.value)
+                    OrderedDitheringFilterStrategy(grayLevel.value, ditherMatrixDimension.value)
             )
         }
     }

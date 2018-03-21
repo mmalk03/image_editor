@@ -12,17 +12,17 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: no.tornado:tornadofx:1.7.14" level="project" />
     <orderEntry type="library" name="Gradle: com.authzee.kotlinguice4:kotlin-guice:1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.21" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish:javax.json:1.0.4" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.10" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.21" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.21" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: com.google.inject:guice:4.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" name="Gradle: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Gradle: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:19.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
   </component>
 </module>

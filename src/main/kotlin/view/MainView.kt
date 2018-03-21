@@ -60,9 +60,14 @@ class MainView : View() {
                 item("Filter parameters") {
                     squeezebox {
                         fold("Dithering", expanded = true) {
-                            vbox {}
                             label("Number of gray levels")
                             combobox(mainViewModel.grayLevel, mainViewModel.grayLevels) {
+                                setOnAction {
+                                    mainViewModel.commit()
+                                }
+                            }
+                            label("Dimension of dither matrix")
+                            combobox(mainViewModel.ditherMatrixDimension, mainViewModel.ditherMatrixDimensions) {
                                 setOnAction {
                                     mainViewModel.commit()
                                 }

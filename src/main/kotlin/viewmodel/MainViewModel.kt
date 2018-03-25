@@ -7,6 +7,7 @@ import model.filter.ImageFilter
 import model.filter.dithering.AverageDitheringFilterStrategy
 import model.filter.dithering.OrderedDitheringFilterStrategy
 import model.filter.dithering.RandomDitheringFilterStrategy
+import model.filter.quantization.MedianCutFilterStrategy
 import service.ImageService
 import tornadofx.*
 
@@ -14,11 +15,14 @@ class MainViewModel : ViewModel() {
 
     val imageService: ImageService by di()
     val imageFilter = ImageFilter()
-
     val doubleImage = DoubleImage()
 
     val grayLevel = SimpleIntegerProperty(2)
     val grayLevels = FXCollections.observableArrayList(2, 4, 6, 8)
+
+    val quantizationColorLevel = SimpleIntegerProperty(8)
+    val quantizationColorLevels = FXCollections.observableArrayList(2, 4, 8, 16, 32, 64, 128, 256)
+
     val ditherMatrixDimension = SimpleIntegerProperty(2)
     val ditherMatrixDimensions = FXCollections.observableArrayList(2, 3, 4, 6)
 
@@ -46,6 +50,14 @@ class MainViewModel : ViewModel() {
             filteredImage.value = imageFilter.filter(
                     filteredImage.value,
                     OrderedDitheringFilterStrategy(grayLevel.value, ditherMatrixDimension.value)
+            )
+        }
+    }
+    val quantizationMedianCutCommand = command {
+        runAsync {
+            filteredImage.value = imageFilter.filter(
+                    filteredImage.value,
+                    MedianCutFilterStrategy(filteredImage.value, quantizationColorLevel.value)
             )
         }
     }

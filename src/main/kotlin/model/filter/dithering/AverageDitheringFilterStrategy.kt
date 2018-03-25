@@ -8,15 +8,12 @@ class AverageDitheringFilterStrategy(grayLevel: Int) : DitheringFilterStrategy(g
     private var n: Int = 0
     private var mean: Double = 0.0
     private var meanDivisor: Double = grayLevel / 2.0
-    private var thresholds: DoubleArray
-    private var grayValues: DoubleArray
+    private var thresholds: DoubleArray = DoubleArray(grayLevel - 1)
+    private var grayValues: DoubleArray = DoubleArray(grayLevel)
 
     init {
-        thresholds = DoubleArray(grayLevel - 1)
-        grayValues = DoubleArray(grayLevel)
         val grayStep = 1.0 / (grayLevel - 1)
-        grayValues[0] = 0.0
-        for (i in 1 until grayLevel - 1) {
+        for (i in 0 until grayLevel - 1) {
             grayValues[i] = grayStep * i
         }
         grayValues[grayValues.size - 1] = 1.0
@@ -24,20 +21,13 @@ class AverageDitheringFilterStrategy(grayLevel: Int) : DitheringFilterStrategy(g
 
     override fun getColor(image: Image, i: Int, j: Int): Color {
         val intensity = grayscaleFilterStrategy.getIntensity(image, i, j)
-
         updateMean(intensity)
         updateThresholds()
-        return mapToGrayColor(intensity)
-    }
-
-    private fun mapToGrayColor(intensity: Double): Color {
-        for (i in 0 until thresholds.size) {
-            if (intensity <= thresholds[i]) {
-                val newIntensity = grayValues[i]
-                return Color.color(newIntensity, newIntensity, newIntensity)
-            }
-        }
-        val newIntensity = grayValues[grayValues.size - 1]
+        (0 until thresholds.size)
+                .filter { intensity <= thresholds[it] }
+                .map { grayValues[it] }
+                .first { return Color.color(it, it, it) }
+        val newIntensity = grayValues.last()
         return Color.color(newIntensity, newIntensity, newIntensity)
     }
 

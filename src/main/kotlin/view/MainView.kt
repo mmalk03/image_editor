@@ -37,7 +37,7 @@ class MainView : View() {
                 }
                 menu("Quantization") {
                     item("Popularity")
-                    item("Median cut")
+                    item("Median cut").command = mainViewModel.quantizationMedianCutCommand
                 }
             }
         }
@@ -68,6 +68,12 @@ class MainView : View() {
                             }
                             label("Dimension of dither matrix")
                             combobox(mainViewModel.ditherMatrixDimension, mainViewModel.ditherMatrixDimensions) {
+                                setOnAction {
+                                    mainViewModel.commit()
+                                }
+                            }
+                            label("Number of quantization colors")
+                            combobox(mainViewModel.quantizationColorLevel, mainViewModel.quantizationColorLevels) {
                                 setOnAction {
                                     mainViewModel.commit()
                                 }

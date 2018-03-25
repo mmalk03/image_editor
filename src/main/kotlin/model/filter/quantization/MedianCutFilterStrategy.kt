@@ -22,30 +22,6 @@ class MedianCutFilterStrategy(val image: Image, maxColors: Int) : FilterStrategy
         return representativeColors[index]
     }
 
-    private fun getDistanceBetweenColors(color1: Color, color2: Color): Double {
-        return (Math.abs(color1.red - color2.red)) +
-                Math.abs(color1.green - color2.green) +
-                Math.abs(color1.blue - color2.blue) / 3.0
-    }
-
-    private fun getColorMap(image: Image): HashMap<Color, ColorWrapper> {
-        val result = HashMap<Color, ColorWrapper>()
-        for (i in 0 until image.width.toInt()) {
-            (0 until image.height.toInt())
-                    .map { image.pixelReader.getColor(i, it) }
-                    .forEach {
-                        if (result.containsKey(it)) {
-                            val temp = result[it]
-                            temp?.increment()
-                        } else {
-                            val colorWrapper = ColorWrapper(it)
-                            result.put(it, colorWrapper)
-                        }
-                    }
-        }
-        return result
-    }
-
     private fun getRepresentativeColors(image: Image, maxColors: Int): List<Color> {
         val colorMap = getColorMap(image)
         if (colorMap.size <= maxColors) {
@@ -67,6 +43,30 @@ class MedianCutFilterStrategy(val image: Image, maxColors: Int) : FilterStrategy
             }
             return colorBoxes.map { colorBox -> getAverageColor(colorBox) }
         }
+    }
+
+    private fun getColorMap(image: Image): HashMap<Color, ColorWrapper> {
+        val result = HashMap<Color, ColorWrapper>()
+        for (i in 0 until image.width.toInt()) {
+            (0 until image.height.toInt())
+                    .map { image.pixelReader.getColor(i, it) }
+                    .forEach {
+                        if (result.containsKey(it)) {
+                            val temp = result[it]
+                            temp?.increment()
+                        } else {
+                            val colorWrapper = ColorWrapper(it)
+                            result.put(it, colorWrapper)
+                        }
+                    }
+        }
+        return result
+    }
+
+    private fun getDistanceBetweenColors(color1: Color, color2: Color): Double {
+        return (Math.abs(color1.red - color2.red)) +
+                Math.abs(color1.green - color2.green) +
+                Math.abs(color1.blue - color2.blue) / 3.0
     }
 
     private fun getBoxToSplit(colorBoxes: List<ColorBox>): ColorBox {

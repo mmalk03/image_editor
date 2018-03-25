@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.image.Image
 
 class DoubleImage {
-
-    var originalImage = SimpleObjectProperty<Image>()
-    var filteredImage = SimpleObjectProperty<Image>()
+    var leftImage = SimpleObjectProperty<Image>()
+    var rightImage = SimpleObjectProperty<Image>()
 }

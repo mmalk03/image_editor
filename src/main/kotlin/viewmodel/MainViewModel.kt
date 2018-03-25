@@ -2,11 +2,13 @@ package viewmodel
 
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.collections.FXCollections
+import javafx.scene.image.Image
 import model.DoubleImage
 import model.filter.ImageFilter
 import model.filter.dithering.AverageDitheringFilterStrategy
 import model.filter.dithering.OrderedDitheringFilterStrategy
 import model.filter.dithering.RandomDitheringFilterStrategy
+import model.filter.grayscale.ScientificGrayscaleFilterStrategy
 import model.filter.quantization.MedianCutFilterStrategy
 import service.ImageService
 import tornadofx.*
@@ -26,46 +28,73 @@ class MainViewModel : ViewModel() {
     val ditherMatrixDimension = SimpleIntegerProperty(2)
     val ditherMatrixDimensions = FXCollections.observableArrayList(2, 3, 4, 6)
 
-    val originalImage = bind { doubleImage.originalImage }
-    val filteredImage = bind { doubleImage.filteredImage }
+    val leftImage = bind { doubleImage.leftImage }
+    val rightImage = bind { doubleImage.rightImage }
+    private var originalImage: Image? = null
 
     val ditheringRandomCommand = command {
-        runAsync {
-            filteredImage.value = imageFilter.filter(
-                    filteredImage.value,
-                    RandomDitheringFilterStrategy(grayLevel.value)
-            )
+        if (originalImage != null) {
+            runAsync {
+                setLeftToGrayscale()
+                rightImage.value = imageFilter.filter(
+                        originalImage!!,
+                        RandomDitheringFilterStrategy(grayLevel.value)
+                )
+            }
         }
     }
+
     val ditheringAverageCommand = command {
-        runAsync {
-            filteredImage.value = imageFilter.filter(
-                    filteredImage.value,
-                    AverageDitheringFilterStrategy(grayLevel.value)
-            )
+        if (originalImage != null) {
+            runAsync {
+                setLeftToGrayscale()
+                rightImage.value = imageFilter.filter(
+                        originalImage!!,
+                        AverageDitheringFilterStrategy(grayLevel.value)
+                )
+            }
         }
     }
+
     val ditheringOrderedCommand = command {
-        runAsync {
-            filteredImage.value = imageFilter.filter(
-                    filteredImage.value,
-                    OrderedDitheringFilterStrategy(grayLevel.value, ditherMatrixDimension.value)
-            )
+        if (originalImage != null) {
+            runAsync {
+                setLeftToGrayscale()
+                rightImage.value = imageFilter.filter(
+                        originalImage!!,
+                        OrderedDitheringFilterStrategy(grayLevel.value, ditherMatrixDimension.value)
+                )
+            }
         }
     }
     val quantizationMedianCutCommand = command {
-        runAsync {
-            filteredImage.value = imageFilter.filter(
-                    filteredImage.value,
-                    MedianCutFilterStrategy(filteredImage.value, quantizationColorLevel.value)
-            )
+        if (originalImage != null) {
+            runAsync {
+                setLeftToOriginal()
+                rightImage.value = imageFilter.filter(
+                        originalImage!!,
+                        MedianCutFilterStrategy(originalImage!!, quantizationColorLevel.value)
+                )
+            }
         }
+    }
+
+    private fun setLeftToGrayscale() {
+        leftImage.value = imageFilter.filter(
+                leftImage.value,
+                ScientificGrayscaleFilterStrategy()
+        )
+    }
+
+    private fun setLeftToOriginal() {
+        leftImage.value = originalImage
     }
 
     fun onOpenImage() {
         val image = imageService.getImage()
-        originalImage.value = image
-        filteredImage.value = image
+        leftImage.value = image
+        rightImage.value = image
+        originalImage = image
     }
 
     fun onSaveImage() {
@@ -73,11 +102,13 @@ class MainViewModel : ViewModel() {
     }
 
     fun onResetImage() {
-        filteredImage.value = originalImage.value
+        leftImage.value = originalImage
+        rightImage.value = originalImage
     }
 
     fun onCloseImage() {
-        originalImage.value = null
-        filteredImage.value = null
+        leftImage.value = null
+        rightImage.value = null
+        originalImage = null
     }
 }

@@ -45,12 +45,12 @@ class MainView : View() {
             splitpane(Orientation.HORIZONTAL) {
                 scrollpane {
                     imageview {
-                        imageProperty().bind(mainViewModel.originalImage)
+                        imageProperty().bind(mainViewModel.leftImage)
                     }
                 }
                 scrollpane {
                     imageview {
-                        imageProperty().bind(mainViewModel.filteredImage)
+                        imageProperty().bind(mainViewModel.rightImage)
                     }
                 }
             }

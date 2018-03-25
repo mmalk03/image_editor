@@ -27,7 +27,7 @@ class RandomDitheringFilterStrategy(grayLevel: Int) : DitheringFilterStrategy(gr
         (0 until thresholds.size)
                 .filter { intensity <= thresholds[it] }
                 .map { grayValues[it] }
-                .first { return Color.color(it, it, it) }
+                .forEach { return Color.color(it, it, it) }
         val newIntensity = grayValues.last()
         return Color.color(newIntensity, newIntensity, newIntensity)
     }

@@ -26,7 +26,8 @@ class AverageDitheringFilterStrategy(grayLevel: Int) : DitheringFilterStrategy(g
         (0 until thresholds.size)
                 .filter { intensity <= thresholds[it] }
                 .map { grayValues[it] }
-                .first { return Color.color(it, it, it) }
+                .forEach { return Color.color(it, it, it) }
+
         val newIntensity = grayValues.last()
         return Color.color(newIntensity, newIntensity, newIntensity)
     }
@@ -37,6 +38,18 @@ class AverageDitheringFilterStrategy(grayLevel: Int) : DitheringFilterStrategy(g
     }
 
     private fun updateThresholds() {
+        val thresholdStepLeftToMean = mean / (grayLevel / 2)
+        for (i in 0 until (grayLevel) / 2) {
+            thresholds[i] = (i + 1) * thresholdStepLeftToMean
+        }
+        val thresholdStepRightToMean = (1.0 - mean) / (grayLevel / 2 - 1)
+        val centerIndex = thresholds.size / 2 + 1
+        for (i in centerIndex until grayLevel - 1) {
+            thresholds[i] = mean + (i + 1 - centerIndex) * thresholdStepRightToMean
+        }
+    }
+
+    private fun updateThresholdsOld() {
         val firstThreshold = mean / meanDivisor
         for (i in 0 until thresholds.size) {
             thresholds[i] = firstThreshold * (1 + i)

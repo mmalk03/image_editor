@@ -36,7 +36,7 @@ class MainView : View() {
                     item("Ordered").command = mainViewModel.ditheringOrderedCommand
                 }
                 menu("Quantization") {
-                    item("Popularity")
+                    item("Popularity").command = mainViewModel.quantizationPopularityCommand
                     item("Median cut").command = mainViewModel.quantizationMedianCutCommand
                 }
             }

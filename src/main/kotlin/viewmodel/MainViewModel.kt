@@ -10,6 +10,7 @@ import model.filter.dithering.OrderedDitheringFilterStrategy
 import model.filter.dithering.RandomDitheringFilterStrategy
 import model.filter.grayscale.ScientificGrayscaleFilterStrategy
 import model.filter.quantization.MedianCutFilterStrategy
+import model.filter.quantization.PopularityFilterStrategy
 import service.ImageService
 import tornadofx.*
 
@@ -43,7 +44,6 @@ class MainViewModel : ViewModel() {
             }
         }
     }
-
     val ditheringAverageCommand = command {
         if (originalImage != null) {
             runAsync {
@@ -55,7 +55,6 @@ class MainViewModel : ViewModel() {
             }
         }
     }
-
     val ditheringOrderedCommand = command {
         if (originalImage != null) {
             runAsync {
@@ -74,6 +73,17 @@ class MainViewModel : ViewModel() {
                 rightImage.value = imageFilter.filter(
                         originalImage!!,
                         MedianCutFilterStrategy(originalImage!!, quantizationColorLevel.value)
+                )
+            }
+        }
+    }
+    val quantizationPopularityCommand = command {
+        if (originalImage != null) {
+            runAsync {
+                setLeftToOriginal()
+                rightImage.value = imageFilter.filter(
+                        originalImage!!,
+                        PopularityFilterStrategy(originalImage!!, quantizationColorLevel.value)
                 )
             }
         }

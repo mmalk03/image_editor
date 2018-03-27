@@ -19,26 +19,14 @@ class OrderedDitheringFilterStrategy(grayLevel: Int, private val ditherMatrixDim
 
     override fun getColor(image: Image, i: Int, j: Int): Color {
         val intensity = grayscaleFilterStrategy.getIntensity(image, i, j)
+        var col = Math.floor((grayLevel - 1) * intensity).toInt()
+        val re = (grayLevel - 1) * intensity - col
+
         val threshold = ditherMatrix.get(i % ditherMatrixDimension, j % ditherMatrixDimension)
-        val scaledThreshold = threshold.toDouble() / (ditherMatrixDimensionSquared)
+        val scaledThreshold = threshold.toDouble() / (ditherMatrixDimensionSquared + 1)
 
-        val thresholds = DoubleArray(grayLevel - 1)
-        val thresholdStepLeft = scaledThreshold / (grayLevel / 2)
-        for (i in 0 until (grayLevel) / 2) {
-            thresholds[i] = (i + 1) * thresholdStepLeft
-        }
-        val thresholdStepRight = (1.0 - scaledThreshold) / (grayLevel / 2 - 1)
-        val centerIndex = thresholds.size / 2 + 1
-        for (i in centerIndex until grayLevel - 1) {
-            thresholds[i] = scaledThreshold + (i + 1 - centerIndex) * thresholdStepRight
-        }
-
-        (0 until thresholds.size)
-                .filter { intensity <= thresholds[it] }
-                .map { grayValues[it] }
-                .forEach { return Color.color(it, it, it) }
-
-        val newIntensity = grayValues.last()
-        return Color.color(newIntensity, newIntensity, newIntensity)
+        if(re >= scaledThreshold)
+            col++
+        return Color.color(grayValues[col], grayValues[col], grayValues[col])
     }
 }

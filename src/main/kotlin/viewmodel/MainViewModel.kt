@@ -50,7 +50,7 @@ class MainViewModel : ViewModel() {
                 setLeftToGrayscale()
                 rightImage.value = imageFilter.filter(
                         originalImage!!,
-                        AverageDitheringFilterStrategy(grayLevel.value)
+                        AverageDitheringFilterStrategy(originalImage!!, grayLevel.value)
                 )
             }
         }

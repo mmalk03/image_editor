@@ -30,19 +30,18 @@ class PopularityFilterStrategy(val image: Image, val colorPaletteSize: Int) : Fi
         for (i in 0 until image.width.toInt()) {
             for (j in 0 until image.height.toInt()) {
                 colorList[pixelReader.getColor(i, j).let {
-                    it.red * RED_MULTIPLIER +
-                            it.green * GREEN_MULTIPLIER +
-                            it.blue * BLUE_MULTIPLIER
-                }.toInt()]++
+                    (it.red * 255 * RED_MULTIPLIER +
+                            it.green * 255 * GREEN_MULTIPLIER +
+                            it.blue * 255 * BLUE_MULTIPLIER).toInt()
+                }]++
             }
         }
         (0 until colorPaletteSize).forEach {
-            val maxFrequencyColor = colorList.max()!!
             val maxFrequencyColorIndex = colorList.indexOf(colorList.max()!!)
 
-            val red = (maxFrequencyColor / RED_MULTIPLIER)
-            val green = (maxFrequencyColor - red * RED_MULTIPLIER) / GREEN_MULTIPLIER
-            val blue = (maxFrequencyColor - red * RED_MULTIPLIER - green * GREEN_MULTIPLIER) / BLUE_MULTIPLIER
+            val red = (maxFrequencyColorIndex / RED_MULTIPLIER)
+            val green = (maxFrequencyColorIndex - red * RED_MULTIPLIER) / GREEN_MULTIPLIER
+            val blue = (maxFrequencyColorIndex - red * RED_MULTIPLIER - green * GREEN_MULTIPLIER) / BLUE_MULTIPLIER
             colorPalette.add(Color.color(
                     (red / 255.0),
                     (green / 255.0),

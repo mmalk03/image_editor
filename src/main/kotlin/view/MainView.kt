@@ -1,6 +1,7 @@
 package view
 
 import javafx.geometry.Orientation
+import javafx.scene.layout.VBox
 import viewmodel.MainViewModel
 import tornadofx.*
 
@@ -42,15 +43,29 @@ class MainView : View() {
             }
         }
         center {
-            splitpane(Orientation.HORIZONTAL) {
-                scrollpane {
-                    imageview {
-                        imageProperty().bind(mainViewModel.leftImage)
+            tabpane {
+                tab("Filters", VBox()){
+                    splitpane(Orientation.HORIZONTAL) {
+                        scrollpane {
+                            imageview {
+                                imageProperty().bind(mainViewModel.leftImage)
+                            }
+                        }
+                        scrollpane {
+                            imageview {
+                                imageProperty().bind(mainViewModel.rightImage)
+                            }
+                        }
                     }
                 }
-                scrollpane {
-                    imageview {
-                        imageProperty().bind(mainViewModel.rightImage)
+                tab("Canvas", VBox()){
+                    scrollpane {
+                        imageview {
+                            imageProperty().bind(mainViewModel.canvasImage)
+                            setOnMouseClicked {
+                                mainViewModel.onCanvasMouseClick(it)
+                            }
+                        }
                     }
                 }
             }
@@ -74,6 +89,18 @@ class MainView : View() {
                             }
                             label("Number of quantization colors")
                             combobox(mainViewModel.quantizationColorLevel, mainViewModel.quantizationColorLevels) {
+                                setOnAction {
+                                    mainViewModel.commit()
+                                }
+                            }
+                        }
+                    }
+                }
+                item("Canvas parameters") {
+                    squeezebox {
+                        fold("Circle", expanded = true) {
+                            label("Radius of circle")
+                            combobox(mainViewModel.circleRadius, mainViewModel.circleRadiuses) {
                                 setOnAction {
                                     mainViewModel.commit()
                                 }

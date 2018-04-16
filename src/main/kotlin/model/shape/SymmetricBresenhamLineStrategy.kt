@@ -3,23 +3,23 @@ package model.shape
 import java.util.*
 
 class SymmetricBresenhamLineStrategy : LineStrategy() {
-    override fun getCoordinates(x1: Int, y1: Int, x2: Int, y2: Int): List<Pair<Int, Int>> {
-        val dx = x2 - x1
-        val dy = y2 - y1
+    override fun getCoordinates(source: Coordinate, dest: Coordinate): List<Coordinate> {
+        val dx = dest.x - source.x
+        val dy = dest.y - source.y
         var d = 2 * dy - dx
 
         val dE = 2 * dy
         val dNE = 2 * (dy - dx)
 
-        var xf = x1
-        var yf = y1
-        var xb = x2
-        var yb = y2
+        var xf = source.x
+        var yf = source.y
+        var xb = dest.x
+        var yb = dest.y
 
-        val coordinates = LinkedList<Pair<Int, Int>>()
+        val coordinates = LinkedList<Coordinate>()
 
-        coordinates.add(Pair(xf, yf))
-        coordinates.add(Pair(xb, yb))
+        coordinates.add(Coordinate(xf, yf))
+        coordinates.add(Coordinate(xb, yb))
 
         while (xf < xb) {
             ++xf
@@ -31,8 +31,8 @@ class SymmetricBresenhamLineStrategy : LineStrategy() {
                 ++yf
                 --yb
             }
-            coordinates.add(Pair(xf, yf))
-            coordinates.add(Pair(xb, yb))
+            coordinates.add(Coordinate(xf, yf))
+            coordinates.add(Coordinate(xb, yb))
         }
         return coordinates
     }

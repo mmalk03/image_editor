@@ -1,13 +1,18 @@
 package view
 
 import javafx.geometry.Orientation
+import javafx.scene.control.TabPane
 import javafx.scene.layout.VBox
-import viewmodel.MainViewModel
+import service.*
 import tornadofx.*
+import viewmodel.CanvasViewModel
+import viewmodel.FilterViewModel
 
 class MainView : View() {
 
-    val mainViewModel: MainViewModel by inject()
+    val filterViewModel: FilterViewModel by inject()
+    val canvasViewModel: CanvasViewModel by inject()
+    val imageFileChooserService: ImageFileChooserService by di()
 
     override val root = borderpane {
         prefHeight = 800.0
@@ -18,52 +23,65 @@ class MainView : View() {
             menubar {
                 menu("File") {
                     item("Open image", "Ctrl+O") {
-                        setOnAction { mainViewModel.onOpenImage() }
+                        setOnAction {
+                            imageFileChooserService.loadImage()
+                            fire(ImageLoadedEvent)
+                        }
                     }
                     item("Save image", "Shortcut+S") {
-                        setOnAction { mainViewModel.onSaveImage() }
+                        setOnAction {
+                            fire(ImageSaveEvent)
+                        }
                     }
                     item("Reset image", "Ctrl+R") {
-                        setOnAction { mainViewModel.onResetImage() }
+                        setOnAction {
+                            fire(ImageResetEvent)
+                        }
                     }
                     separator()
                     item("Close image", "Ctrl+Q") {
-                        setOnAction { mainViewModel.onCloseImage() }
+                        setOnAction {
+                            fire(ImageCloseEvent)
+                        }
                     }
                 }
                 menu("Dithering") {
-                    item("Random").command = mainViewModel.ditheringRandomCommand
-                    item("Average").command = mainViewModel.ditheringAverageCommand
-                    item("Ordered").command = mainViewModel.ditheringOrderedCommand
+                    item("Random").command = filterViewModel.ditheringRandomCommand
+                    item("Average").command = filterViewModel.ditheringAverageCommand
+                    item("Ordered").command = filterViewModel.ditheringOrderedCommand
                 }
                 menu("Quantization") {
-                    item("Popularity").command = mainViewModel.quantizationPopularityCommand
-                    item("Median cut").command = mainViewModel.quantizationMedianCutCommand
+                    item("Popularity").command = filterViewModel.quantizationPopularityCommand
+                    item("Median cut").command = filterViewModel.quantizationMedianCutCommand
                 }
             }
         }
         center {
             tabpane {
-                tab("Filters", VBox()){
+                tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
+                tab("Filters", VBox()) {
+                    setOnSelectionChanged {
+                        filterViewModel.onTabSelectionChanged(it)
+                    }
                     splitpane(Orientation.HORIZONTAL) {
                         scrollpane {
                             imageview {
-                                imageProperty().bind(mainViewModel.leftImage)
+                                imageProperty().bind(filterViewModel.leftImage)
                             }
                         }
                         scrollpane {
                             imageview {
-                                imageProperty().bind(mainViewModel.rightImage)
+                                imageProperty().bind(filterViewModel.rightImage)
                             }
                         }
                     }
                 }
-                tab("Canvas", VBox()){
+                tab("Canvas", VBox()) {
                     scrollpane {
                         imageview {
-                            imageProperty().bind(mainViewModel.canvasImage)
+                            imageProperty().bind(canvasViewModel.imageProperty)
                             setOnMouseClicked {
-                                mainViewModel.onCanvasMouseClick(it)
+                                canvasViewModel.onMouseClick(it)
                             }
                         }
                     }
@@ -76,21 +94,21 @@ class MainView : View() {
                     squeezebox {
                         fold("Dithering", expanded = true) {
                             label("Number of gray levels")
-                            combobox(mainViewModel.grayLevel, mainViewModel.grayLevels) {
+                            combobox(filterViewModel.grayLevelProperty, filterViewModel.grayLevelsProperty) {
                                 setOnAction {
-                                    mainViewModel.commit()
+                                    filterViewModel.commit()
                                 }
                             }
                             label("Dimension of dither matrix")
-                            combobox(mainViewModel.ditherMatrixDimension, mainViewModel.ditherMatrixDimensions) {
+                            combobox(filterViewModel.ditherMatrixDimensionProperty, filterViewModel.ditherMatrixDimensionsProperty) {
                                 setOnAction {
-                                    mainViewModel.commit()
+                                    filterViewModel.commit()
                                 }
                             }
                             label("Number of quantization colors")
-                            combobox(mainViewModel.quantizationColorLevel, mainViewModel.quantizationColorLevels) {
+                            combobox(filterViewModel.quantizationColorLevelProperty, filterViewModel.quantizationColorLevelsProperty) {
                                 setOnAction {
-                                    mainViewModel.commit()
+                                    filterViewModel.commit()
                                 }
                             }
                         }
@@ -100,9 +118,15 @@ class MainView : View() {
                     squeezebox {
                         fold("Circle", expanded = true) {
                             label("Radius of circle")
-                            combobox(mainViewModel.circleRadius, mainViewModel.circleRadiuses) {
+                            combobox(canvasViewModel.circleRadiusProperty, canvasViewModel.circleRadiusesProperty) {
                                 setOnAction {
-                                    mainViewModel.commit()
+                                    canvasViewModel.commit()
+                                }
+                            }
+                            label("Shape")
+                            combobox(canvasViewModel.shapeProperty, canvasViewModel.shapesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
                                 }
                             }
                         }

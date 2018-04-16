@@ -2,6 +2,7 @@ package service
 
 import javafx.scene.image.Image
 
-interface ImageService {
-    fun getImage(): Image?
+abstract class ImageService {
+    abstract var image: Image?
+    abstract fun loadImage()
 }

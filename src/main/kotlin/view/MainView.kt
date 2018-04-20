@@ -118,8 +118,14 @@ class MainView : View() {
                 item("Canvas parameters") {
                     squeezebox {
                         fold("Circle", expanded = true) {
-                            label("Radius of circle")
+                            label("Circle radius")
                             combobox(canvasViewModel.circleRadiusProperty, canvasViewModel.circleRadiusesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
+                                }
+                            }
+                            label("Line thickness")
+                            combobox(canvasViewModel.lineThicknessProperty, canvasViewModel.lineThicknessesProperty) {
                                 setOnAction {
                                     canvasViewModel.commit()
                                 }

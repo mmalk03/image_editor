@@ -4,8 +4,12 @@ import javafx.scene.image.Image
 import javafx.scene.image.WritableImage
 import javafx.scene.paint.Color
 
-class ImageFilter {
-    fun filter(image: Image, strategy: FilterStrategy): Image {
+interface IImageFilter {
+    fun filter(image: Image, strategy: FilterStrategy): Image
+}
+
+class ImageFilter : IImageFilter {
+    override fun filter(image: Image, strategy: FilterStrategy): Image {
         val outputImage = WritableImage(image.width.toInt(), image.height.toInt())
         val pixelWriter = outputImage.pixelWriter
         //val totalPixels = image.width.toLong() * image.height.toLong()

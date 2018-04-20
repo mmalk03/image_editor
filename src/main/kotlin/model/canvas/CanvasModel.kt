@@ -1,17 +1,15 @@
-package model.shape
+package model.canvas
 
-import com.authzee.kotlinguice4.getInstance
-import com.google.inject.Guice
+import com.google.inject.Inject
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.image.Image
-import module.MainModule
 import tornadofx.*
 
-class CanvasModel {
+class CanvasModel @Inject constructor(private val lineStrategy: LineStrategy,
+                                      private val circleStrategy: CircleStrategy,
+                                      private val shapeDrawer: IShapeDrawer) {
     val circleRadiuses = listOf(10, 20, 40, 80)
-
-    private val injector = Guice.createInjector(MainModule())
     private var originalImage: Image? = null
 
     val imageProperty = SimpleObjectProperty<Image>()
@@ -19,10 +17,6 @@ class CanvasModel {
 
     val circleRadiusProperty = SimpleIntegerProperty(10)
     private var circleRadius by circleRadiusProperty
-
-    private val lineStrategy = injector.getInstance<LineStrategy>()
-    private val circleStrategy = injector.getInstance<CircleStrategy>()
-    private val shapeDrawer = ShapeDrawer()
 
     fun drawLine(source: Coordinate, dest: Coordinate) {
         val coordinates = lineStrategy.getCoordinates(source, dest)

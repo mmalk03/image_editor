@@ -1,4 +1,4 @@
-package model.shape
+package model.canvas
 
 import javafx.scene.image.Image
 

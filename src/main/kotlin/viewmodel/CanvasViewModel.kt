@@ -1,37 +1,43 @@
 package viewmodel
 
-import com.authzee.kotlinguice4.getInstance
-import com.google.inject.Guice
+import com.google.inject.Inject
+import javafx.beans.property.Property
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import javafx.scene.image.Image
 import javafx.scene.input.MouseEvent
-import model.shape.CanvasModel
-import model.shape.Coordinate
-import module.MainModule
-import service.ImageFileChooserService
-import tornadofx.*
+import model.canvas.CanvasModel
+import model.canvas.Coordinate
+import service.ImageService
 
-class CanvasViewModel : ViewModel() {
+abstract class ICanvasViewModel : MyViewModel() {
+    abstract val shapesProperty: ObservableList<String>
+    abstract val shapeProperty: SimpleStringProperty
+    abstract val circleRadiusProperty: Property<Number>
+    abstract val imageProperty: Property<Image>
+    abstract val circleRadiusesProperty: ObservableList<Int>
+    abstract fun onMouseClick(event: MouseEvent)
+}
+
+class CanvasViewModel @Inject constructor(private val imageService: ImageService,
+                                          private val canvasModel: CanvasModel) : ICanvasViewModel() {
     enum class Shape {
         LINE, CIRCLE
     }
 
-    private val injector = Guice.createInjector(MainModule())
-    private val imageService = injector.getInstance<ImageFileChooserService>()
     private var originalImage: Image? = null
 
     private var firstClickMade = false
     private lateinit var sourceMouseCoordinate: Coordinate
-    val shapesProperty = FXCollections.observableArrayList(Shape.values().map { it.toString() })
-    val shapeProperty = SimpleStringProperty("LINE")
+    override val shapesProperty = FXCollections.observableArrayList(Shape.values().map { it.toString() })!!
+    override val shapeProperty = SimpleStringProperty("LINE")
 
-    private val canvasModel = CanvasModel()
-    val circleRadiusProperty = bind { canvasModel.circleRadiusProperty }
-    val imageProperty = bind { canvasModel.imageProperty }
-    val circleRadiusesProperty = FXCollections.observableArrayList(canvasModel.circleRadiuses)
+    override val circleRadiusProperty = bind { canvasModel.circleRadiusProperty }
+    override val imageProperty = bind { canvasModel.imageProperty }
+    override val circleRadiusesProperty = FXCollections.observableArrayList(canvasModel.circleRadiuses)!!
 
-    fun onMouseClick(event: MouseEvent) {
+    override fun onMouseClick(event: MouseEvent) {
         when (Shape.valueOf(shapeProperty.value)) {
             Shape.LINE -> handleLineClick(event)
             Shape.CIRCLE -> handleCircleClick(event)
@@ -60,22 +66,22 @@ class CanvasViewModel : ViewModel() {
                 coordinate.y < 0 || coordinate.y >= image.height
     }
 
-    fun onOpenImage() {
+    override fun onOpenImage() {
         val image = imageService.image
         if (image != null) {
             canvasModel.onOpenImage(image)
         }
     }
 
-    fun onSaveImage() {
+    override fun onSaveImage() {
         TODO("implement")
     }
 
-    fun onResetImage() {
+    override fun onResetImage() {
         canvasModel.onResetImage()
     }
 
-    fun onCloseImage() {
+    override fun onCloseImage() {
         canvasModel.onCloseImage()
     }
 }

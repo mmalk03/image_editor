@@ -1,13 +1,17 @@
-package model.shape
+package model.canvas
 
 import javafx.scene.image.Image
 import javafx.scene.image.WritableImage
 import javafx.scene.paint.Color
 
-class ShapeDrawer {
-    private val color = Color.color(0.0, 0.0, 0.0)
+interface IShapeDrawer {
+    fun draw(image: Image, coordinates: List<Coordinate>): Image
+}
 
-    fun draw(image: Image, coordinates: List<Coordinate>): Image {
+class ShapeDrawer : IShapeDrawer {
+    val color = Color.color(0.0, 0.0, 0.0)!!
+
+    override fun draw(image: Image, coordinates: List<Coordinate>): Image {
         val outputImage = WritableImage(image.width.toInt(), image.height.toInt())
         val pixelWriter = outputImage.pixelWriter
         val pixelReader = image.pixelReader
@@ -20,7 +24,7 @@ class ShapeDrawer {
             }
         }
 
-        for (coordinate in coordinates){
+        for (coordinate in coordinates) {
             pixelWriter.setColor(coordinate.x, coordinate.y, color)
         }
 

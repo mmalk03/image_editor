@@ -1,11 +1,9 @@
 package service
 
-import com.google.inject.Singleton
 import javafx.scene.image.Image
 import javafx.stage.FileChooser
 import tornadofx.*
 
-@Singleton
 class ImageFileChooserService : ImageService() {
     override var image: Image? = null
 

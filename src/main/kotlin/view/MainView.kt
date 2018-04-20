@@ -1,18 +1,22 @@
 package view
 
+import events.ImageCloseEvent
+import events.ImageLoadedEvent
+import events.ImageResetEvent
+import events.ImageSaveEvent
 import javafx.geometry.Orientation
 import javafx.scene.control.TabPane
 import javafx.scene.layout.VBox
-import service.*
+import service.ImageService
 import tornadofx.*
-import viewmodel.CanvasViewModel
-import viewmodel.FilterViewModel
+import viewmodel.ICanvasViewModel
+import viewmodel.IFilterViewModel
 
 class MainView : View() {
 
-    val filterViewModel: FilterViewModel by inject()
-    val canvasViewModel: CanvasViewModel by inject()
-    val imageFileChooserService: ImageFileChooserService by di()
+    private val filterViewModel: IFilterViewModel by di()
+    private val canvasViewModel: ICanvasViewModel by di()
+    private val imageService: ImageService by di()
 
     override val root = borderpane {
         prefHeight = 800.0
@@ -24,7 +28,7 @@ class MainView : View() {
                 menu("File") {
                     item("Open image", "Ctrl+O") {
                         setOnAction {
-                            imageFileChooserService.loadImage()
+                            imageService.loadImage()
                             fire(ImageLoadedEvent)
                         }
                     }
@@ -60,9 +64,6 @@ class MainView : View() {
             tabpane {
                 tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
                 tab("Filters", VBox()) {
-                    setOnSelectionChanged {
-                        filterViewModel.onTabSelectionChanged(it)
-                    }
                     splitpane(Orientation.HORIZONTAL) {
                         scrollpane {
                             imageview {

@@ -9,6 +9,7 @@ import javafx.scene.image.Image
 import javafx.scene.input.MouseEvent
 import model.canvas.CanvasModel
 import model.canvas.Coordinate
+import service.BlankImageService
 import service.ImageService
 
 abstract class ICanvasViewModel : MyViewModel() {
@@ -37,6 +38,13 @@ class CanvasViewModel @Inject constructor(private val imageService: ImageService
     override val imageProperty = bind { canvasModel.imageProperty }
     override val circleRadiusesProperty = FXCollections.observableArrayList(canvasModel.circleRadiuses)!!
 
+    init {
+        val blankImageService = BlankImageService()
+        blankImageService.loadImage()
+        originalImage = blankImageService.image
+        canvasModel.onOpenImage(originalImage!!)
+    }
+
     override fun onMouseClick(event: MouseEvent) {
         when (Shape.valueOf(shapeProperty.value)) {
             Shape.LINE -> handleLineClick(event)
@@ -58,7 +66,7 @@ class CanvasViewModel @Inject constructor(private val imageService: ImageService
     }
 
     private fun handleCircleClick(event: MouseEvent) {
-        val coordinate = Coordinate(event.sceneX.toInt(), event.sceneY.toInt())
+        val coordinate = Coordinate(event.x.toInt(), event.y.toInt())
         if (!isCoordinateInsideImageBounds(coordinate, originalImage!!)) return
         canvasModel.drawCircle(coordinate)
     }

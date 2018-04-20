@@ -25,7 +25,10 @@ class ShapeDrawer : IShapeDrawer {
         }
 
         for (coordinate in coordinates) {
-            pixelWriter.setColor(coordinate.x, coordinate.y, color)
+            try {
+                pixelWriter.setColor(coordinate.x, coordinate.y, color)
+            } catch (e: IndexOutOfBoundsException) {
+            }
         }
 
         return outputImage

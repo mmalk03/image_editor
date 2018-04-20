@@ -65,10 +65,8 @@ class FilterViewModel @Inject constructor(private val imageService: ImageService
     }
 
     override fun onOpenImage() {
-        val image = imageService.image
-        if (image != null) {
-            filterModel.onOpenImage(image)
-        }
+        val image = imageService.image ?: return
+        filterModel.onOpenImage(image)
     }
 
     override fun onSaveImage() {

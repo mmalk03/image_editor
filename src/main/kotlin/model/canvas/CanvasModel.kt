@@ -19,11 +19,13 @@ class CanvasModel @Inject constructor(private val lineStrategy: LineStrategy,
     private var circleRadius by circleRadiusProperty
 
     fun drawLine(source: Coordinate, dest: Coordinate) {
+        if (image == null) return
         val coordinates = lineStrategy.getCoordinates(source, dest)
         image = shapeDrawer.draw(image, coordinates)
     }
 
     fun drawCircle(origin: Coordinate) {
+        if (image == null) return
         val coordinates = circleStrategy.getCoordinates(origin, circleRadius)
         image = shapeDrawer.draw(image, coordinates)
     }

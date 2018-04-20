@@ -36,38 +36,33 @@ class FilterModel @Inject constructor(private val grayscaleFilterStrategy: Grays
     private var ditherMatrixDimension by ditherMatrixDimensionProperty
 
     fun ditheringRandom() {
-        if (originalImage != null) {
-            setLeftToGreyscale()
-            rightImage = imageFilter.filter(originalImage!!, RandomDitheringFilterStrategy(grayLevel))
-        }
+        if (originalImage == null) return
+        setLeftToGreyscale()
+        rightImage = imageFilter.filter(originalImage!!, RandomDitheringFilterStrategy(grayLevel))
     }
 
     fun ditheringAverage() {
-        if (originalImage != null) {
-            setLeftToGreyscale()
-            rightImage = imageFilter.filter(originalImage!!, AverageDitheringFilterStrategy(originalImage!!, grayLevel))
-        }
+        if (originalImage == null) return
+        setLeftToGreyscale()
+        rightImage = imageFilter.filter(originalImage!!, AverageDitheringFilterStrategy(originalImage!!, grayLevel))
     }
 
     fun ditheringOrdered() {
-        if (originalImage != null) {
-            setLeftToGreyscale()
-            rightImage = imageFilter.filter(originalImage!!, OrderedDitheringFilterStrategy(grayLevel, ditherMatrixDimension))
-        }
+        if (originalImage == null) return
+        setLeftToGreyscale()
+        rightImage = imageFilter.filter(originalImage!!, OrderedDitheringFilterStrategy(grayLevel, ditherMatrixDimension))
     }
 
     fun quantizationMedianCut() {
-        if (originalImage != null) {
-            setLeftToOriginal()
-            rightImage = imageFilter.filter(originalImage!!, MedianCutFilterStrategy(originalImage!!, quantizationColorLevel))
-        }
+        if (originalImage == null) return
+        setLeftToOriginal()
+        rightImage = imageFilter.filter(originalImage!!, MedianCutFilterStrategy(originalImage!!, quantizationColorLevel))
     }
 
     fun quantizationPopularity() {
-        if (originalImage != null) {
-            setLeftToOriginal()
-            rightImage = imageFilter.filter(originalImage!!, PopularityFilterStrategy(originalImage!!, quantizationColorLevel))
-        }
+        if (originalImage == null) return
+        setLeftToOriginal()
+        rightImage = imageFilter.filter(originalImage!!, PopularityFilterStrategy(originalImage!!, quantizationColorLevel))
     }
 
     fun onOpenImage(image: Image) {

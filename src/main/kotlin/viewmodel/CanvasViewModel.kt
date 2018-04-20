@@ -46,7 +46,7 @@ class CanvasViewModel @Inject constructor(private val imageService: ImageService
 
     private fun handleLineClick(event: MouseEvent) {
         if (originalImage == null) return
-        val coordinate = Coordinate(event.sceneX.toInt(), event.sceneY.toInt())
+        val coordinate = Coordinate(event.x.toInt(), event.y.toInt())
         if (!isCoordinateInsideImageBounds(coordinate, originalImage!!)) return
 
         if (firstClickMade) {
@@ -58,19 +58,20 @@ class CanvasViewModel @Inject constructor(private val imageService: ImageService
     }
 
     private fun handleCircleClick(event: MouseEvent) {
-        canvasModel.drawCircle(Coordinate(event.x.toInt(), event.y.toInt()))
+        val coordinate = Coordinate(event.sceneX.toInt(), event.sceneY.toInt())
+        if (!isCoordinateInsideImageBounds(coordinate, originalImage!!)) return
+        canvasModel.drawCircle(coordinate)
     }
 
     private fun isCoordinateInsideImageBounds(coordinate: Coordinate, image: Image): Boolean {
-        return coordinate.x < 0 || coordinate.x >= image.width ||
-                coordinate.y < 0 || coordinate.y >= image.height
+        return coordinate.x >= 0 && coordinate.x < image.width &&
+                coordinate.y >= 0 && coordinate.y < image.height
     }
 
     override fun onOpenImage() {
-        val image = imageService.image
-        if (image != null) {
-            canvasModel.onOpenImage(image)
-        }
+        val image = imageService.image ?: return
+        originalImage = image
+        canvasModel.onOpenImage(image)
     }
 
     override fun onSaveImage() {

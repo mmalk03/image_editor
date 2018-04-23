@@ -54,14 +54,20 @@ class GuptaSproullThickLineStrategy : ThickLineStrategy() {
         var x = xSource
         var y = ySource
 
+        var i: Int
+
         if (steep) {
             intensifyPixel(y, x, thickness, 0.0)
-            intensifyPixel(y, x + 1, thickness, 0.0)
-            intensifyPixel(y, x - 1, thickness, 0.0)
+            i = 1
+            while (intensifyPixel(y, x + i, thickness, i * twoDxInvDenominator) > 0) i++
+            i = 1
+            while (intensifyPixel(y, x - i, thickness, i * twoDxInvDenominator) > 0) i++
         } else {
             intensifyPixel(x, y, thickness, 0.0)
-            intensifyPixel(x, y + 1, thickness, 0.0)
-            intensifyPixel(x, y - 1, thickness, 0.0)
+            i = 1
+            while (intensifyPixel(x, y + i, thickness, i * twoDxInvDenominator) > 0) i++
+            i = 1
+            while (intensifyPixel(x, y - i, thickness, i * twoDxInvDenominator) > 0) i++
         }
 
         while (x < xDest) {
@@ -76,28 +82,32 @@ class GuptaSproullThickLineStrategy : ThickLineStrategy() {
             x += 1
             if (steep) {
                 intensifyPixel(y, x, thickness, twoDx * invDenominator)
-                intensifyPixel(y, x + 1, thickness, twoDxInvDenominator - twoDx * invDenominator)
-                intensifyPixel(y, x - 1, thickness, twoDxInvDenominator + twoDx * invDenominator)
+                i = 1
+                while (intensifyPixel(y, x + i, thickness, i * twoDxInvDenominator - twoDx * invDenominator) > 0) i++
+                i = 1
+                while (intensifyPixel(y, x - i, thickness, i * twoDxInvDenominator + twoDx * invDenominator) > 0) i++
             } else {
                 intensifyPixel(x, y, thickness, twoDx * invDenominator)
-                intensifyPixel(x, y + 1, thickness, twoDxInvDenominator - twoDx * invDenominator)
-                intensifyPixel(x, y - 1, thickness, twoDxInvDenominator + twoDx * invDenominator)
+                i = 1
+                while (intensifyPixel(x, y + i, thickness, i * twoDxInvDenominator - twoDx * invDenominator) > 0) i++
+                i = 1
+                while (intensifyPixel(x, y - i, thickness, i * twoDxInvDenominator + twoDx * invDenominator) > 0) i++
             }
         }
         return coordinates
     }
 
-    private fun intensifyPixel(x: Int, y: Int, thickness: Double, distance: Double) {
+    private fun intensifyPixel(x: Int, y: Int, thickness: Double, distance: Double): Double {
         val coverage = getCoverage(thickness, distance)
         if (coverage > 0) {
             coordinates.add(CoverageCoordinate(x, y, coverage))
         }
+        return coverage
     }
 
     private fun getCoverage(thickness: Double, distance: Double): Double {
         val w = thickness / 2.0
-        //TODO find out what does this r mean
-        val r = 2.0
+        val r = 0.5
         return when {
             w >= r -> when {
                 w <= distance -> getCov(distance - w, r)

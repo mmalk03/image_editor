@@ -130,6 +130,12 @@ class MainView : View() {
                                     canvasViewModel.commit()
                                 }
                             }
+                            label("Drawing type")
+                            combobox(canvasViewModel.drawingTypeProperty, canvasViewModel.drawingTypesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
+                                }
+                            }
                             label("Shape")
                             combobox(canvasViewModel.shapeProperty, canvasViewModel.shapesProperty) {
                                 setOnAction {

@@ -3,7 +3,7 @@ package model.canvas
 import java.util.*
 import kotlin.math.abs
 
-class SymmetricBresenhamLineStrategy : LineStrategy() {
+class SymmetricBresenhamLineStrategy : LineStrategy {
     override fun getCoordinates(source: Coordinate, dest: Coordinate): List<Coordinate> {
         var xSource = source.x
         var ySource = source.y
@@ -44,8 +44,13 @@ class SymmetricBresenhamLineStrategy : LineStrategy() {
         val dNE = 2 * (dy - dx)
 
         val coordinates = LinkedList<Coordinate>()
-        coordinates.add(Coordinate(xSource, ySource))
-        coordinates.add(Coordinate(xDest, yDest))
+        if (steep) {
+            coordinates.add(Coordinate(ySource, xSource))
+            coordinates.add(Coordinate(yDest, xDest))
+        } else {
+            coordinates.add(Coordinate(xSource, ySource))
+            coordinates.add(Coordinate(xDest, yDest))
+        }
 
         while (xSource < xDest) {
             xSource += 1

@@ -24,19 +24,20 @@ class CoverageShapeDrawer : ICoverageShapeDrawer {
 
         for (coordinate in coordinates) {
             try {
-                pixelWriter.setColor(coordinate.x, coordinate.y,
-                        Color.color(clamp(1.0 - coordinate.coverage), clamp(1.0 - coordinate.coverage), clamp(1.0 - coordinate.coverage)))
+                println("Coverage: " + coordinate.coverage)
+                pixelWriter.setColor(coordinate.x, coordinate.y, getColor(coordinate.coverage))
             } catch (e: IndexOutOfBoundsException) {
             }
         }
         return outputImage
     }
 
-    private fun clamp(value: Double): Double {
-        return when {
-            value < 0 -> 0.0
-            value > 1 -> 1.0
-            else -> value
+    private fun getColor(coverage: Double): Color {
+        val intensity = when {
+            coverage < 0 -> 1.0
+            coverage > 1.0 -> 0.0
+            else -> 1.0 - coverage
         }
+        return Color.color(intensity, intensity, intensity)
     }
 }

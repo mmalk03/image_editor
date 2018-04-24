@@ -130,6 +130,12 @@ class MainView : View() {
                                     canvasViewModel.commit()
                                 }
                             }
+                            label("Pen thickness")
+                            combobox(canvasViewModel.penThicknessProperty, canvasViewModel.penThicknessesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
+                                }
+                            }
                             label("Drawing type")
                             combobox(canvasViewModel.drawingTypeProperty, canvasViewModel.drawingTypesProperty) {
                                 setOnAction {

@@ -23,10 +23,10 @@ class CoverageShapeDrawer : ICoverageShapeDrawer {
         }
 
         for (coordinate in coordinates) {
-            try {
-                println("Coverage: " + coordinate.coverage)
+            //println("Coverage: " + coordinate.coverage)
+            if (coordinate.x >= 0 && coordinate.x < outputImage.width &&
+                    coordinate.y >= 0 && coordinate.y < outputImage.height) {
                 pixelWriter.setColor(coordinate.x, coordinate.y, getColor(coordinate.coverage))
-            } catch (e: IndexOutOfBoundsException) {
             }
         }
         return outputImage

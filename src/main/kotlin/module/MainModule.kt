@@ -21,6 +21,7 @@ class MainModule : KotlinModule() {
         bind<LineStrategy>().to<SymmetricBresenhamLineStrategy>()
         bind<CircleStrategy>().to<MidpointCircleStrategy>()
         bind<ThickLineStrategy>().to<GuptaSproullThickLineStrategy>()
+        bind<ISuperSamplingStrategy>().to<SuperSamplingStrategy>()
         bind<IShapeDrawer>().to<ShapeDrawer>()
         bind<ICoverageShapeDrawer>().to<CoverageShapeDrawer>()
         bind<IImageFilter>().to<ImageFilter>()

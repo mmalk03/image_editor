@@ -17,10 +17,12 @@ abstract class ICanvasViewModel : MyViewModel() {
     abstract val drawingTypeProperty: SimpleStringProperty
     abstract val circleRadiusProperty: Property<Number>
     abstract val lineThicknessProperty: Property<Number>
+    abstract val penThicknessProperty: Property<Number>
     abstract val shapeProperty: Property<String>
     abstract val imageProperty: Property<Image>
     abstract val circleRadiusesProperty: ObservableList<Int>
     abstract val lineThicknessesProperty: ObservableList<Double>
+    abstract val penThicknessesProperty: ObservableList<Double>
     abstract val shapesProperty: ObservableList<String>
     abstract fun onMouseClick(event: MouseEvent)
 }
@@ -28,7 +30,7 @@ abstract class ICanvasViewModel : MyViewModel() {
 class CanvasViewModel @Inject constructor(private val imageService: ImageService,
                                           private val canvasModel: CanvasModel) : ICanvasViewModel() {
     enum class DrawingType {
-        LINE, CIRCLE, THICK_LINE, PEN
+        LINE, CIRCLE, THICK_LINE, PEN, SUPER_SAMPLING
     }
 
     private var originalImage: Image? = null
@@ -39,10 +41,12 @@ class CanvasViewModel @Inject constructor(private val imageService: ImageService
     override val drawingTypeProperty = SimpleStringProperty(DrawingType.values().first().toString())
     override val circleRadiusProperty = bind { canvasModel.circleRadiusProperty }
     override val lineThicknessProperty = bind { canvasModel.lineThicknessProperty }
+    override val penThicknessProperty = bind { canvasModel.penThicknessProperty }
     override val shapeProperty = bind { canvasModel.shapeProperty }
     override val drawingTypesProperty = FXCollections.observableArrayList(DrawingType.values().map { it.toString() })!!
     override val circleRadiusesProperty = FXCollections.observableArrayList(canvasModel.circleRadiuses)!!
     override val lineThicknessesProperty = FXCollections.observableArrayList(canvasModel.lineThicknesses)!!
+    override val penThicknessesProperty = FXCollections.observableArrayList(canvasModel.penThicknesses)!!
     override val shapesProperty = FXCollections.observableArrayList(canvasModel.shapes)!!
 
     init {
@@ -58,6 +62,7 @@ class CanvasViewModel @Inject constructor(private val imageService: ImageService
             DrawingType.CIRCLE -> handleCircleClick(event)
             DrawingType.THICK_LINE -> handleThickLineClick(event)
             DrawingType.PEN -> handlePenClick(event)
+            DrawingType.SUPER_SAMPLING -> handleSuperSamplingClick(event)
         }
     }
 
@@ -100,6 +105,19 @@ class CanvasViewModel @Inject constructor(private val imageService: ImageService
 
         if (firstClickMade) {
             canvasModel.drawPen(sourceMouseCoordinate, coordinate)
+        } else {
+            sourceMouseCoordinate = coordinate
+        }
+        firstClickMade = !firstClickMade
+    }
+
+    private fun handleSuperSamplingClick(event: MouseEvent) {
+        if (originalImage == null) return
+        val coordinate = Coordinate(event.x.toInt(), event.y.toInt())
+        if (!isCoordinateInsideImageBounds(coordinate, originalImage!!)) return
+
+        if (firstClickMade) {
+            canvasModel.drawSuperSampling(sourceMouseCoordinate, coordinate)
         } else {
             sourceMouseCoordinate = coordinate
         }

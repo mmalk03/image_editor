@@ -2,9 +2,7 @@ package model.canvas
 
 import kotlin.math.PI
 
-class LineCircleDecorator(lineStrategy: LineStrategy) : LineDecorator(lineStrategy) {
-
-    private val r = 3
+class LineCircleDecorator(lineStrategy: LineStrategy, private val r: Int) : LineDecorator(lineStrategy) {
 
     override fun getCoordinates(source: Coordinate, dest: Coordinate): List<Coordinate> {
         val originalCoordinates = lineStrategy.getCoordinates(source, dest)

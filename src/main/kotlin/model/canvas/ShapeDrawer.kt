@@ -25,9 +25,9 @@ class ShapeDrawer : IShapeDrawer {
         }
 
         for (coordinate in coordinates) {
-            try {
+            if (coordinate.x >= 0 && coordinate.x < outputImage.width &&
+                    coordinate.y >= 0 && coordinate.y < outputImage.height) {
                 pixelWriter.setColor(coordinate.x, coordinate.y, color)
-            } catch (e: IndexOutOfBoundsException) {
             }
         }
         return outputImage

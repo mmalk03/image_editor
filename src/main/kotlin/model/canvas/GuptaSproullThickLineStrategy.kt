@@ -1,11 +1,9 @@
 package model.canvas
 
 import java.util.*
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.sqrt
+import kotlin.math.*
 
-class GuptaSproullThickLineStrategy : ThickLineStrategy() {
+class GuptaSproullThickLineStrategy : ThickLineStrategy {
     private val coordinates = LinkedList<CoverageCoordinate>()
 
     override fun getCoordinates(source: Coordinate, dest: Coordinate, thickness: Double): List<CoverageCoordinate> {
@@ -55,19 +53,19 @@ class GuptaSproullThickLineStrategy : ThickLineStrategy() {
         var y = ySource
 
         var i: Int
-
+//if deltaY <0 change to - +
         if (steep) {
             intensifyPixel(y, x, thickness, 0.0)
             i = 1
-            while (intensifyPixel(y, x + i, thickness, i * twoDxInvDenominator) > 0) i++
+            while (intensifyPixel(y + i * deltaY, x, thickness, i * twoDxInvDenominator) > 0) i++
             i = 1
-            while (intensifyPixel(y, x - i, thickness, i * twoDxInvDenominator) > 0) i++
+            while (intensifyPixel(y - i * deltaY, x, thickness, i * twoDxInvDenominator) > 0) i++
         } else {
             intensifyPixel(x, y, thickness, 0.0)
             i = 1
-            while (intensifyPixel(x, y + i, thickness, i * twoDxInvDenominator) > 0) i++
+            while (intensifyPixel(x, y + i * deltaY, thickness, i * twoDxInvDenominator) > 0) i++
             i = 1
-            while (intensifyPixel(x, y - i, thickness, i * twoDxInvDenominator) > 0) i++
+            while (intensifyPixel(x, y - i * deltaY, thickness, i * twoDxInvDenominator) > 0) i++
         }
 
         while (x < xDest) {
@@ -83,15 +81,15 @@ class GuptaSproullThickLineStrategy : ThickLineStrategy() {
             if (steep) {
                 intensifyPixel(y, x, thickness, twoDx * invDenominator)
                 i = 1
-                while (intensifyPixel(y, x + i, thickness, i * twoDxInvDenominator - twoDx * invDenominator) > 0) i++
+                while (intensifyPixel(y + i * deltaY, x, thickness, i * twoDxInvDenominator - twoDx * invDenominator) > 0) i++
                 i = 1
-                while (intensifyPixel(y, x - i, thickness, i * twoDxInvDenominator + twoDx * invDenominator) > 0) i++
+                while (intensifyPixel(y - i * deltaY, x, thickness, i * twoDxInvDenominator + twoDx * invDenominator) > 0) i++
             } else {
                 intensifyPixel(x, y, thickness, twoDx * invDenominator)
                 i = 1
-                while (intensifyPixel(x, y + i, thickness, i * twoDxInvDenominator - twoDx * invDenominator) > 0) i++
+                while (intensifyPixel(x, y + i * deltaY, thickness, i * twoDxInvDenominator - twoDx * invDenominator) > 0) i++
                 i = 1
-                while (intensifyPixel(x, y - i, thickness, i * twoDxInvDenominator + twoDx * invDenominator) > 0) i++
+                while (intensifyPixel(x, y - i * deltaY, thickness, i * twoDxInvDenominator + twoDx * invDenominator) > 0) i++
             }
         }
         return coordinates
@@ -123,8 +121,7 @@ class GuptaSproullThickLineStrategy : ThickLineStrategy() {
 
     private fun getCov(d: Double, r: Double): Double {
         return if (d <= r) {
-            0.5 - (d * sqrt(r * r - d * d)) / (PI * (r * r)) -
-                    1 / (PI * Math.asin(d / r))
+            (1 / PI) * acos(d / r) - (d / (PI * r * r)) * sqrt(r * r - d * d)
         } else {
             0.0
         }

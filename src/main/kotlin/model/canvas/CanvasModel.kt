@@ -13,7 +13,7 @@ class CanvasModel @Inject constructor(private val lineStrategy: LineStrategy,
                                       private val shapeDrawer: IShapeDrawer,
                                       private val coverageShapeDrawer: ICoverageShapeDrawer) {
     enum class Shape {
-        SQUARE
+        CIRCLE, SQUARE
     }
 
     val circleRadiuses = listOf(10, 20, 40, 80)
@@ -33,6 +33,7 @@ class CanvasModel @Inject constructor(private val lineStrategy: LineStrategy,
     val shapeProperty = SimpleObjectProperty<String>(Shape.SQUARE.toString())
     private var shape by shapeProperty
 
+    private val lineCircleDecorator = LineCircleDecorator(lineStrategy)
     private val lineSquareDecorator = LineSquareDecorator(lineStrategy)
 
     fun drawLine(source: Coordinate, dest: Coordinate) {
@@ -55,8 +56,14 @@ class CanvasModel @Inject constructor(private val lineStrategy: LineStrategy,
 
     fun drawPen(source: Coordinate, dest: Coordinate) {
         if (image == null) return
-        val coordinates = lineSquareDecorator.getCoordinates(source, dest)
-        image = shapeDrawer.draw(image, coordinates)
+        val coordinates = when (shape) {
+            Shape.CIRCLE.toString() -> lineCircleDecorator.getCoordinates(source, dest)
+            Shape.SQUARE.toString() -> lineSquareDecorator.getCoordinates(source, dest)
+            else -> null
+        }
+        if(coordinates != null){
+            image = shapeDrawer.draw(image, coordinates)
+        }
     }
 
     fun onOpenImage(openedImage: Image) {

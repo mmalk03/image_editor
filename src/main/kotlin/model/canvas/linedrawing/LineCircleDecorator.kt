@@ -1,5 +1,6 @@
-package model.canvas
+package model.canvas.linedrawing
 
+import model.canvas.Coordinate
 import kotlin.math.PI
 
 class LineCircleDecorator(lineStrategy: LineStrategy, private val r: Int) : LineDecorator(lineStrategy) {

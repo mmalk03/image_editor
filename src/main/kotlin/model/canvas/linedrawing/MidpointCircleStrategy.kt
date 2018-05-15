@@ -1,5 +1,6 @@
-package model.canvas
+package model.canvas.linedrawing
 
+import model.canvas.Coordinate
 import java.util.*
 
 class MidpointCircleStrategy : CircleStrategy() {

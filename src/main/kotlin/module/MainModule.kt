@@ -3,6 +3,9 @@ package module
 import com.authzee.kotlinguice4.KotlinModule
 import com.google.inject.Singleton
 import model.canvas.*
+import model.canvas.linedrawing.*
+import model.clipping.ClippingStrategy
+import model.clipping.CoherSutherlandClippingStrategy
 import model.filter.IImageFilter
 import model.filter.ImageFilter
 import model.filter.grayscale.GrayscaleFilterStrategy
@@ -19,6 +22,7 @@ class MainModule : KotlinModule() {
         bind<ImageService>().to<ImageFileChooserService>().`in`<Singleton>()
         bind<GrayscaleFilterStrategy>().to<ScientificGrayscaleFilterStrategy>()
         bind<LineStrategy>().to<SymmetricBresenhamLineStrategy>()
+        bind<ClippingStrategy>().to<CoherSutherlandClippingStrategy>()
         bind<CircleStrategy>().to<MidpointCircleStrategy>()
         bind<ThickLineStrategy>().to<GuptaSproullThickLineStrategy>()
         bind<ISuperSamplingStrategy>().to<SuperSamplingStrategy>()

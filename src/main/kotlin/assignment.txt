@@ -1,0 +1,7 @@
+cs - Clipping, Lecture 6, Cohen-Sutherland (s. 5-9)
+    1. select 2 points which draws rectangle
+    2. select another 2 points to draw line, and draw it only in the rectangle
+
+et - Scanline Fill Algorithm, Lecture 7, 1st update method - Edge Table (s. 4-8)
+    1. select several points to draw a polygon
+    2. apply filling

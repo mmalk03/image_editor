@@ -1,5 +1,7 @@
-package model.canvas
+package model.canvas.linedrawing
 
+import model.canvas.Coordinate
+import model.canvas.CoverageCoordinate
 import java.util.*
 import kotlin.math.*
 

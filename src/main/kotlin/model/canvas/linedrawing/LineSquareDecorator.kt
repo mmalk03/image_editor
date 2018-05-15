@@ -1,4 +1,6 @@
-package model.canvas
+package model.canvas.linedrawing
+
+import model.canvas.Coordinate
 
 class LineSquareDecorator(lineStrategy: LineStrategy) : LineDecorator(lineStrategy) {
     override fun getCoordinates(source: Coordinate, dest: Coordinate): List<Coordinate> {

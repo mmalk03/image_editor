@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.image.Image
+import model.canvas.linedrawing.*
 import service.BigBlankImageService
 import tornadofx.*
 

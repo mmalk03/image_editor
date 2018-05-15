@@ -77,7 +77,7 @@ class MainView : View() {
                         }
                     }
                 }
-                tab("Canvas", VBox()) {
+                tab("Shape drawing", VBox()) {
                     scrollpane {
                         imageview {
                             imageProperty().bind(canvasViewModel.imageProperty)
@@ -91,7 +91,7 @@ class MainView : View() {
         }
         left {
             drawer {
-                item("Filter parameters") {
+                item("Filter") {
                     squeezebox {
                         fold("Dithering", expanded = true) {
                             label("Number of gray levels")
@@ -115,10 +115,47 @@ class MainView : View() {
                         }
                     }
                 }
-                item("Canvas parameters") {
+                item("Shape drawing") {
                     squeezebox {
                         fold("Circle", expanded = true) {
                             label("Circle radius")
+                            combobox(canvasViewModel.circleRadiusProperty, canvasViewModel.circleRadiusesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
+                                }
+                            }
+                            label("Line thickness")
+                            combobox(canvasViewModel.lineThicknessProperty, canvasViewModel.lineThicknessesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
+                                }
+                            }
+                            label("Pen thickness")
+                            combobox(canvasViewModel.penThicknessProperty, canvasViewModel.penThicknessesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
+                                }
+                            }
+                            label("Drawing type")
+                            combobox(canvasViewModel.drawingTypeProperty, canvasViewModel.drawingTypesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
+                                }
+                            }
+                            label("Shape")
+                            combobox(canvasViewModel.shapeProperty, canvasViewModel.shapesProperty) {
+                                setOnAction {
+                                    canvasViewModel.commit()
+                                }
+                            }
+                        }
+                    }
+                }
+                item("Clipping") {
+                    squeezebox {
+                        fold("Circle", expanded = true) {
+                            label("Rectangle")
+                            checkbox {  }
                             combobox(canvasViewModel.circleRadiusProperty, canvasViewModel.circleRadiusesProperty) {
                                 setOnAction {
                                     canvasViewModel.commit()

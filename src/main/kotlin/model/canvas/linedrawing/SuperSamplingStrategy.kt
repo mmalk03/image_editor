@@ -1,7 +1,8 @@
-package model.canvas
+package model.canvas.linedrawing
 
 import javafx.scene.image.Image
 import javafx.scene.paint.Color
+import model.canvas.CoverageCoordinate
 import java.util.*
 
 interface ISuperSamplingStrategy {

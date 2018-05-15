@@ -11,6 +11,7 @@ import service.ImageService
 import tornadofx.*
 import viewmodel.ICanvasViewModel
 import viewmodel.IClippingViewModel
+import viewmodel.IFillingViewModel
 import viewmodel.IFilterViewModel
 
 class MainView : View() {
@@ -18,6 +19,7 @@ class MainView : View() {
     private val filterViewModel: IFilterViewModel by di()
     private val canvasViewModel: ICanvasViewModel by di()
     private val clippingViewModel: IClippingViewModel by di()
+    private val fillingViewModel: IFillingViewModel by di()
     private val imageService: ImageService by di()
 
     override val root = borderpane {
@@ -95,6 +97,16 @@ class MainView : View() {
                             imageProperty().bind(clippingViewModel.imageProperty)
                             setOnMouseClicked {
                                 clippingViewModel.onMouseClick(it)
+                            }
+                        }
+                    }
+                }
+                tab("Filling", VBox()) {
+                    scrollpane {
+                        imageview {
+                            imageProperty().bind(fillingViewModel.imageProperty)
+                            setOnMouseClicked {
+                                fillingViewModel.onMouseClick(it)
                             }
                         }
                     }

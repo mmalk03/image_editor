@@ -6,6 +6,8 @@ import model.canvas.*
 import model.canvas.linedrawing.*
 import model.clipping.ClippingStrategy
 import model.clipping.CoherSutherlandClippingStrategy
+import model.filling.ActiveEdgeTableFillingStrategy
+import model.filling.FillingStrategy
 import model.filter.IImageFilter
 import model.filter.ImageFilter
 import model.filter.grayscale.GrayscaleFilterStrategy
@@ -20,6 +22,7 @@ class MainModule : KotlinModule() {
         bind<GrayscaleFilterStrategy>().to<ScientificGrayscaleFilterStrategy>()
         bind<LineStrategy>().to<SymmetricBresenhamLineStrategy>()
         bind<ClippingStrategy>().to<CoherSutherlandClippingStrategy>()
+        bind<FillingStrategy>().to<ActiveEdgeTableFillingStrategy>()
         bind<CircleStrategy>().to<MidpointCircleStrategy>()
         bind<ThickLineStrategy>().to<GuptaSproullThickLineStrategy>()
         bind<ISuperSamplingStrategy>().to<SuperSamplingStrategy>()
@@ -29,5 +32,6 @@ class MainModule : KotlinModule() {
         bind<IFilterViewModel>().to<FilterViewModel>()
         bind<ICanvasViewModel>().to<CanvasViewModel>()
         bind<IClippingViewModel>().to<ClippingViewModel>()
+        bind<IFillingViewModel>().to<FillingViewModel>()
     }
 }

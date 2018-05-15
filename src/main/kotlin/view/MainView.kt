@@ -10,12 +10,14 @@ import javafx.scene.layout.VBox
 import service.ImageService
 import tornadofx.*
 import viewmodel.ICanvasViewModel
+import viewmodel.IClippingViewModel
 import viewmodel.IFilterViewModel
 
 class MainView : View() {
 
     private val filterViewModel: IFilterViewModel by di()
     private val canvasViewModel: ICanvasViewModel by di()
+    private val clippingViewModel: IClippingViewModel by di()
     private val imageService: ImageService by di()
 
     override val root = borderpane {
@@ -87,6 +89,16 @@ class MainView : View() {
                         }
                     }
                 }
+                tab("Clipping", VBox()) {
+                    scrollpane {
+                        imageview {
+                            imageProperty().bind(clippingViewModel.imageProperty)
+                            setOnMouseClicked {
+                                clippingViewModel.onMouseClick(it)
+                            }
+                        }
+                    }
+                }
             }
         }
         left {
@@ -154,35 +166,9 @@ class MainView : View() {
                 item("Clipping") {
                     squeezebox {
                         fold("Circle", expanded = true) {
-                            label("Rectangle")
-                            checkbox {  }
-                            combobox(canvasViewModel.circleRadiusProperty, canvasViewModel.circleRadiusesProperty) {
+                            checkbox("Rectangle", clippingViewModel.isRectangleSelectedProperty) {
                                 setOnAction {
-                                    canvasViewModel.commit()
-                                }
-                            }
-                            label("Line thickness")
-                            combobox(canvasViewModel.lineThicknessProperty, canvasViewModel.lineThicknessesProperty) {
-                                setOnAction {
-                                    canvasViewModel.commit()
-                                }
-                            }
-                            label("Pen thickness")
-                            combobox(canvasViewModel.penThicknessProperty, canvasViewModel.penThicknessesProperty) {
-                                setOnAction {
-                                    canvasViewModel.commit()
-                                }
-                            }
-                            label("Drawing type")
-                            combobox(canvasViewModel.drawingTypeProperty, canvasViewModel.drawingTypesProperty) {
-                                setOnAction {
-                                    canvasViewModel.commit()
-                                }
-                            }
-                            label("Shape")
-                            combobox(canvasViewModel.shapeProperty, canvasViewModel.shapesProperty) {
-                                setOnAction {
-                                    canvasViewModel.commit()
+                                    clippingViewModel.commit()
                                 }
                             }
                         }

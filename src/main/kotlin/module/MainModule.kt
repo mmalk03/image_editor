@@ -12,10 +12,7 @@ import model.filter.grayscale.GrayscaleFilterStrategy
 import model.filter.grayscale.ScientificGrayscaleFilterStrategy
 import service.ImageFileChooserService
 import service.ImageService
-import viewmodel.CanvasViewModel
-import viewmodel.FilterViewModel
-import viewmodel.ICanvasViewModel
-import viewmodel.IFilterViewModel
+import viewmodel.*
 
 class MainModule : KotlinModule() {
     override fun configure() {
@@ -31,5 +28,6 @@ class MainModule : KotlinModule() {
         bind<IImageFilter>().to<ImageFilter>()
         bind<IFilterViewModel>().to<FilterViewModel>()
         bind<ICanvasViewModel>().to<CanvasViewModel>()
+        bind<IClippingViewModel>().to<ClippingViewModel>()
     }
 }

@@ -7,6 +7,7 @@ import javafx.scene.image.Image
 import javafx.scene.input.MouseEvent
 import model.canvas.Coordinate
 import model.clipping.ClippingModel
+import model.clipping.Rectangle
 import service.BlankImageService
 import service.ImageService
 
@@ -21,18 +22,21 @@ class ClippingViewModel @Inject constructor(private val imageService: ImageServi
     private var originalImage: Image? = null
 
     private var firstClickMade = false
+    private var firstClickRectMade = false
 
     private lateinit var sourceMouseCoordinate: Coordinate
-    override val imageProperty = bind { clippingModel.imageProperty }
+    private lateinit var sourceMouseRectCoordinate: Coordinate
 
+    private var clipRect: Rectangle? = null
+
+    override val imageProperty = bind { clippingModel.imageProperty }
     override val isRectangleSelectedProperty = SimpleBooleanProperty(true)
-    private var isRectangleSelected by isRectangleSelectedProperty
 
     init {
         val blankImageService = BlankImageService()
         blankImageService.loadImage()
         originalImage = blankImageService.image
-        canvasModel.onOpenImage(originalImage!!)
+        clippingModel.onOpenImage(originalImage!!)
     }
 
     override fun onMouseClick(event: MouseEvent) {
@@ -45,11 +49,12 @@ class ClippingViewModel @Inject constructor(private val imageService: ImageServi
 
     private fun handleLineClick(event: MouseEvent) {
         if (originalImage == null) return
+        if (clipRect == null) return
         val coordinate = Coordinate(event.x.toInt(), event.y.toInt())
         if (!isCoordinateInsideImageBounds(coordinate, originalImage!!)) return
 
         if (firstClickMade) {
-            canvasModel.drawLine(sourceMouseCoordinate, coordinate)
+            clippingModel.drawLine(sourceMouseCoordinate, coordinate, clipRect!!)
         } else {
             sourceMouseCoordinate = coordinate
         }
@@ -61,12 +66,13 @@ class ClippingViewModel @Inject constructor(private val imageService: ImageServi
         val coordinate = Coordinate(event.x.toInt(), event.y.toInt())
         if (!isCoordinateInsideImageBounds(coordinate, originalImage!!)) return
 
-        if (firstClickMade) {
-            canvasModel.drawLine(sourceMouseCoordinate, coordinate)
+        if (firstClickRectMade) {
+            clipRect = Rectangle(sourceMouseRectCoordinate, coordinate)
+            clippingModel.drawRectangle(clipRect!!)
         } else {
-            sourceMouseCoordinate = coordinate
+            sourceMouseRectCoordinate = coordinate
         }
-        firstClickMade = !firstClickMade
+        firstClickRectMade = !firstClickRectMade
     }
 
     private fun isCoordinateInsideImageBounds(coordinate: Coordinate, image: Image): Boolean {
@@ -77,7 +83,7 @@ class ClippingViewModel @Inject constructor(private val imageService: ImageServi
     override fun onOpenImage() {
         val image = imageService.image ?: return
         originalImage = image
-        canvasModel.onOpenImage(image)
+        clippingModel.onOpenImage(image)
     }
 
     override fun onSaveImage() {
@@ -85,10 +91,10 @@ class ClippingViewModel @Inject constructor(private val imageService: ImageServi
     }
 
     override fun onResetImage() {
-        canvasModel.onResetImage()
+        clippingModel.onResetImage()
     }
 
     override fun onCloseImage() {
-        canvasModel.onCloseImage()
+        clippingModel.onCloseImage()
     }
 }

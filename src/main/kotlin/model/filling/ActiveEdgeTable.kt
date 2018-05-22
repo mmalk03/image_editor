@@ -10,19 +10,19 @@ class ActiveEdgeTable {
     }
 
     fun sort() {
-        elements.sortBy { edge -> edge.xMin }
+        elements.sortBy { it.xMin }
     }
 
     fun getXPairs(): List<Pair<Double, Double>> {
-        return elements.map { edge -> edge.xMin }.chunked(2).map { list -> Pair(list[0], list[1]) }
+        return elements.map { it.xMin }.chunked(2).map { Pair(it[0], it[1]) }
     }
 
     fun removeEdgesEndingAt(scanLine: Int) {
-        elements.removeIf { edge -> edge.yMax == scanLine }
+        elements.removeIf { it.yMax == scanLine }
     }
 
     fun updateX() {
-        elements.forEach { edge -> edge.xMin += edge.slope }
+        elements.forEach { it.xMin += it.slope }
     }
 
     fun isEmpty(): Boolean {

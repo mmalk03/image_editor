@@ -186,6 +186,15 @@ class MainView : View() {
                         }
                     }
                 }
+                item("Filling") {
+                    squeezebox {
+                        checkbox("Pattern", fillingViewModel.isPatternSelectedProperty) {
+                            setOnAction {
+                                fillingViewModel.commit()
+                            }
+                        }
+                    }
+                }
             }
         }
     }

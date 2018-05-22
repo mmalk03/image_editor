@@ -1,6 +1,7 @@
 package model.filling
 
 import com.google.inject.Inject
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.image.Image
 import model.canvas.Coordinate
@@ -24,11 +25,17 @@ class FillingModel @Inject constructor(private val lineStrategy: LineStrategy,
     val imageProperty = SimpleObjectProperty<Image>()
     private var image by imageProperty
 
+    val isPatternSelectedProperty = SimpleBooleanProperty(false)
+    private var isPatternSelected by isPatternSelectedProperty
+
     private var polygon: Polygon? = null
 
     private var startedDrawingPolygon = false
     private var startCoordinate: Coordinate? = null
     private var prevCoordinate: Coordinate? = null
+
+    private var randomColorStrategy = RandomColorStrategy()
+    private var patternColorStrategy = PatternColorStrategy(Coordinate(0, 0))
 
     init {
         bigBlankImageService.loadImage()
@@ -55,7 +62,11 @@ class FillingModel @Inject constructor(private val lineStrategy: LineStrategy,
     }
 
     private fun fill() {
-        image = fillingStrategy.fillPolygon(polygon!!, image)
+        image = if (isPatternSelected) {
+            fillingStrategy.fillPolygon(polygon!!, image, patternColorStrategy)
+        } else {
+            fillingStrategy.fillPolygon(polygon!!, image, randomColorStrategy)
+        }
     }
 
     private fun drawLine(source: Coordinate, dest: Coordinate) {

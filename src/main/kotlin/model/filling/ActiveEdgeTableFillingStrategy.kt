@@ -2,17 +2,10 @@ package model.filling
 
 import javafx.scene.image.Image
 import javafx.scene.image.WritableImage
-import javafx.scene.paint.Color
-import java.util.*
 
 class ActiveEdgeTableFillingStrategy : FillingStrategy {
-    private val random = Random()
-    private var color = Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble())
-    private val colorRedInc = random.nextDouble() / 0.2
-    private val colorGreenInc = random.nextDouble() / 0.2
-    private val colorBlueInc = random.nextDouble() / 0.2
 
-    override fun fillPolygon(polygon: Polygon, image: Image): Image {
+    override fun fillPolygon(polygon: Polygon, image: Image, colorStrategy: ColorStrategy): Image {
         val outputImage = WritableImage(image.width.toInt(), image.height.toInt())
         val pixelWriter = outputImage.pixelWriter
         val pixelReader = image.pixelReader
@@ -31,8 +24,8 @@ class ActiveEdgeTableFillingStrategy : FillingStrategy {
             activeEdgeTable.add(edgeTable.poll(y))
             activeEdgeTable.sort()
             activeEdgeTable.getXPairs().forEach {
-                for (i in it.first.toInt() until it.second.toInt() + 1) {
-                    pixelWriter.setColor(i, y, getRandomColor())
+                for (x in it.first.toInt() until it.second.toInt() + 1) {
+                    pixelWriter.setColor(x, y, colorStrategy.getColor(x, y))
                 }
             }
             y += 1
@@ -41,15 +34,5 @@ class ActiveEdgeTableFillingStrategy : FillingStrategy {
         }
 
         return outputImage
-    }
-
-    private fun getRandomColor(): Color {
-        color = Color.color(clamp(color.red + colorRedInc), clamp(color.green + colorGreenInc), clamp(color.blue + colorBlueInc))
-        return color
-        //return Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble())
-    }
-
-    private fun clamp(d: Double): Double {
-        return d % 1.0
     }
 }

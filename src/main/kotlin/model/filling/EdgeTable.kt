@@ -33,7 +33,7 @@ class EdgeTable(polygon: Polygon, length: Int) {
     }
 
     fun getFirstScanLine(): Int {
-        return buckets.indexOfFirst { bucket -> bucket.size > 0 }
+        return buckets.indexOfFirst { it.size > 0 }
     }
 
     fun poll(i: Int): LinkedList<Edge> {
@@ -44,6 +44,6 @@ class EdgeTable(polygon: Polygon, length: Int) {
     }
 
     fun isEmpty(): Boolean {
-        return buckets.all { bucket -> bucket.size == 0 }
+        return buckets.all { it.size == 0 }
     }
 }

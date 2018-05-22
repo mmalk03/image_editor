@@ -32,10 +32,7 @@ class ActiveEdgeTableFillingStrategy : FillingStrategy {
             activeEdgeTable.sort()
             activeEdgeTable.getXPairs().forEach {
                 for (i in it.first.toInt() until it.second.toInt() + 1) {
-                    try {
-                        pixelWriter.setColor(i, y, getRandomColor())
-                    } catch (e: IndexOutOfBoundsException) {
-                    }
+                    pixelWriter.setColor(i, y, getRandomColor())
                 }
             }
             y += 1

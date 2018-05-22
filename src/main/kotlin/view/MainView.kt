@@ -9,10 +9,7 @@ import javafx.scene.control.TabPane
 import javafx.scene.layout.VBox
 import service.ImageService
 import tornadofx.*
-import viewmodel.ICanvasViewModel
-import viewmodel.IClippingViewModel
-import viewmodel.IFillingViewModel
-import viewmodel.IFilterViewModel
+import viewmodel.*
 
 class MainView : View() {
 
@@ -20,6 +17,7 @@ class MainView : View() {
     private val canvasViewModel: ICanvasViewModel by di()
     private val clippingViewModel: IClippingViewModel by di()
     private val fillingViewModel: IFillingViewModel by di()
+    private val floodFillingViewModel: IFloodFillingViewModel by di()
     private val imageService: ImageService by di()
 
     override val root = borderpane {
@@ -111,6 +109,16 @@ class MainView : View() {
                         }
                     }
                 }
+                tab("Flood filling", VBox()) {
+                    scrollpane {
+                        imageview {
+                            imageProperty().bind(floodFillingViewModel.imageProperty)
+                            setOnMouseClicked {
+                                floodFillingViewModel.onMouseClick(it)
+                            }
+                        }
+                    }
+                }
             }
         }
         left {
@@ -191,6 +199,17 @@ class MainView : View() {
                         checkbox("Pattern", fillingViewModel.isPatternSelectedProperty) {
                             setOnAction {
                                 fillingViewModel.commit()
+                            }
+                        }
+                    }
+                }
+                item("Flood filling") {
+                    squeezebox {
+                        fold("Threshold", expanded = true) {
+                            combobox(floodFillingViewModel.thresholdProperty, floodFillingViewModel.thresholdsProperty) {
+                                setOnAction {
+                                    floodFillingViewModel.commit()
+                                }
                             }
                         }
                     }

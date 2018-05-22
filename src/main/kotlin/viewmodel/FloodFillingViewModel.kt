@@ -7,35 +7,37 @@ import javafx.collections.ObservableList
 import javafx.scene.image.Image
 import javafx.scene.input.MouseEvent
 import model.canvas.Coordinate
-import model.filling.FillingModel
+import model.flood.FloodFillingModel
 import service.BlankImageService
 import service.ImageService
 
-abstract class IFillingViewModel : MyViewModel() {
-    abstract val isPatternSelectedProperty: Property<Boolean>
+abstract class IFloodFillingViewModel : MyViewModel() {
     abstract val imageProperty: Property<Image>
+    abstract val thresholdProperty: Property<Number>
+    abstract val thresholdsProperty: ObservableList<Int>
     abstract fun onMouseClick(event: MouseEvent)
 }
 
-class FillingViewModel @Inject constructor(private val imageService: ImageService,
-                                           private val fillingModel: FillingModel) : IFillingViewModel() {
-    override val isPatternSelectedProperty = bind { fillingModel.isPatternSelectedProperty }
+class FloodFillingViewModel @Inject constructor(private val imageService: ImageService,
+                                                private val floodFillingModel: FloodFillingModel) : IFloodFillingViewModel() {
     private var originalImage: Image? = null
 
-    override val imageProperty = bind { fillingModel.imageProperty }
+    override val thresholdsProperty = FXCollections.observableArrayList(floodFillingModel.thresholds)!!
+    override val thresholdProperty = bind { floodFillingModel.thresholdProperty }
+    override val imageProperty = bind { floodFillingModel.imageProperty }
 
     init {
         val blankImageService = BlankImageService()
         blankImageService.loadImage()
         originalImage = blankImageService.image
-        fillingModel.onOpenImage(originalImage!!)
+        floodFillingModel.onOpenImage(originalImage!!)
     }
 
     override fun onMouseClick(event: MouseEvent) {
         if (originalImage == null) return
         val coordinate = Coordinate(event.x.toInt(), event.y.toInt())
         if (!isCoordinateInsideImageBounds(coordinate, originalImage!!)) return
-        fillingModel.addCoordinate(coordinate)
+        floodFillingModel.fill(coordinate)
     }
 
     private fun isCoordinateInsideImageBounds(coordinate: Coordinate, image: Image): Boolean {
@@ -46,7 +48,7 @@ class FillingViewModel @Inject constructor(private val imageService: ImageServic
     override fun onOpenImage() {
         val image = imageService.image ?: return
         originalImage = image
-        fillingModel.onOpenImage(image)
+        floodFillingModel.onOpenImage(image)
     }
 
     override fun onSaveImage() {
@@ -54,10 +56,10 @@ class FillingViewModel @Inject constructor(private val imageService: ImageServic
     }
 
     override fun onResetImage() {
-        fillingModel.onResetImage()
+        floodFillingModel.onResetImage()
     }
 
     override fun onCloseImage() {
-        fillingModel.onCloseImage()
+        floodFillingModel.onCloseImage()
     }
 }

@@ -2,7 +2,10 @@ package module
 
 import com.authzee.kotlinguice4.KotlinModule
 import com.google.inject.Singleton
-import model.canvas.*
+import model.canvas.CoverageShapeDrawer
+import model.canvas.ICoverageShapeDrawer
+import model.canvas.IShapeDrawer
+import model.canvas.ShapeDrawer
 import model.canvas.linedrawing.*
 import model.clipping.ClippingStrategy
 import model.clipping.CoherSutherlandClippingStrategy
@@ -12,6 +15,8 @@ import model.filter.IImageFilter
 import model.filter.ImageFilter
 import model.filter.grayscale.GrayscaleFilterStrategy
 import model.filter.grayscale.ScientificGrayscaleFilterStrategy
+import model.flood.FloodFillingStrategy
+import model.flood.ThresholdFloodFillingStrategy
 import service.ImageFileChooserService
 import service.ImageService
 import viewmodel.*
@@ -33,5 +38,6 @@ class MainModule : KotlinModule() {
         bind<ICanvasViewModel>().to<CanvasViewModel>()
         bind<IClippingViewModel>().to<ClippingViewModel>()
         bind<IFillingViewModel>().to<FillingViewModel>()
+        bind<IFloodFillingViewModel>().to<FloodFillingViewModel>()
     }
 }

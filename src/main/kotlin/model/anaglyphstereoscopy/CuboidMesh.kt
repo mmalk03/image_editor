@@ -3,8 +3,9 @@ package model.anaglyphstereoscopy
 import com.curiouscreature.kotlin.math.Float4
 
 class CuboidMesh(val width: Float, val height: Float, val depth: Float) : Mesh() {
-
-    private val tuples: Array<Vertex>
+    override var tuples: Array<Vertex>
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
 
     init {
         val frontNormalVector = Float4(0f, 0f, 1f, 0f)

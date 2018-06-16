@@ -1,9 +1,11 @@
 package model.anaglyphstereoscopy
 
+import com.curiouscreature.kotlin.math.Float3
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.image.Image
+import javafx.scene.image.WritableImage
 import model.canvas.Coordinate
 import service.BigBlankImageService
 import tornadofx.*
@@ -39,18 +41,32 @@ class AnaglyphStereoscopyModel {
         bigBlankImageService.loadImage()
     }
 
-    fun addObject(coordinate: Coordinate){
-        when(shape){
-            "Cylinder" -> drawObject(CuboidMesh())
-            "Cone" -> drawObject(CuboidMesh())
-            "Sphere" -> drawObject(CuboidMesh())
-            "Cuboid" -> drawObject(CuboidMesh())
+    fun addObject(coordinate: Coordinate) {
+        when (shape) {
+            "Cylinder" -> drawObject(CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat()))
+            "Cone" -> drawObject(CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat()))
+            "Sphere" -> drawObject(CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat()))
+            "Cuboid" -> drawObject(CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat()))
         }
     }
 
-    private fun drawObject(mesh: Mesh){
+    private fun drawObject(mesh: Mesh) {
+        val camera = Camera(
+                Float3(0f, 0f, 0f),
+                Float3(100f, 100f, 100f),
+                Float3(1f, 1f, 1f)
+        )
+        val outputImage = WritableImage(image.width.toInt(), image.height.toInt())
+        val pixelWriter = outputImage.pixelWriter
+        val pixelReader = image.pixelReader
 
-        //TODO: draw mesh
+        for (i in 0 until image.width.toInt()) {
+            for (j in 0 until image.height.toInt()) {
+                pixelWriter.setColor(i, j, pixelReader.getColor(i, j))
+            }
+        }
+        mesh.draw(pixelWriter, camera)
+        image = outputImage
     }
 
     fun onOpenImage(openedImage: Image) {

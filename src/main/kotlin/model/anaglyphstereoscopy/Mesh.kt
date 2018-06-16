@@ -1,6 +1,7 @@
 package model.anaglyphstereoscopy
 
 import com.curiouscreature.kotlin.math.*
+import javafx.scene.image.PixelWriter
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -46,26 +47,45 @@ abstract class Mesh {
             )
         }
 
-        fun getCameraMatrix(cPos: Float3, cTarget: Float3, cUp: Float3): Mat4 {
-            val diff = cPos - cTarget
+        fun getCameraMatrix(camera: Camera): Mat4 {
+            val diff = camera.position - camera.target
             val cZ = diff / length(diff)
 
-            val productUpZ = cross(cUp, cZ)
+            val productUpZ = cross(camera.up, cZ)
             val cX = productUpZ / length(productUpZ)
 
             val productZX = cross(cZ, cX)
             val cY = productZX / length(productZX)
 
             return Mat4(
-                    Float4(cX.x, cX.y, cX.z, dot(cX, cPos)),
-                    Float4(cY.x, cY.y, cY.z, dot(cY, cPos)),
-                    Float4(cZ.x, cZ.y, cZ.z, dot(cZ, cPos)),
+                    Float4(cX.x, cX.y, cX.z, dot(cX, camera.position)),
+                    Float4(cY.x, cY.y, cY.z, dot(cY, camera.position)),
+                    Float4(cZ.x, cZ.y, cZ.z, dot(cZ, camera.position)),
                     Float4(0f, 0f, 0f, 1f)
             )
         }
+
+        fun getProjectionMatrix(theta: Float, sX: Float, sY: Float): Mat4 {
+            //TODO: Mat[1, 1] has alpha in the original formula (here theta was used)
+            return Mat4(
+                    Float4((sX / 2f) * cot(theta / 2f), 0f, -sX / 2f, 0f),
+                    Float4(0f, (-sX / 2f) * (cot(theta / 2f) / theta), -sY / 2f, 0f),
+                    Float4(0f, 0f, 0f, -1f),
+                    Float4(0f, 0f, -1f, 0f)
+            )
+        }
+
+        private fun cot(tan: Float): Float {
+            return 1f / tan
+        }
     }
 
-    protected lateinit var vertices: Array<Float4>
+    fun draw(pixelWriter: PixelWriter, camera: Camera) {
+        // pixelWriter.setColor(coordinate.x, coordinate.y, color)
+
+    }
+
+    protected lateinit var tuples: Array<Vertex>
     protected lateinit var position: Float3
     protected lateinit var rotation: Float3
 

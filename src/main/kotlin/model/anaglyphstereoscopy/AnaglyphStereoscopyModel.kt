@@ -52,9 +52,11 @@ class AnaglyphStereoscopyModel {
 
     private fun drawObject(mesh: Mesh) {
         val camera = Camera(
-                Float3(0f, 0f, 0f),
-                Float3(100f, 100f, 100f),
-                Float3(1f, 1f, 1f)
+                Float3(image.width.toFloat(), image.height.toFloat(), 100f),
+                Float3(image.width.toFloat(), image.height.toFloat(), 0f),
+//                Float3(0f, 0f, 10f),
+//                Float3(0f, 0f, 0f),
+                Float3(10f, 5f, 0f)
         )
         val outputImage = WritableImage(image.width.toInt(), image.height.toInt())
         val pixelWriter = outputImage.pixelWriter
@@ -65,7 +67,7 @@ class AnaglyphStereoscopyModel {
                 pixelWriter.setColor(i, j, pixelReader.getColor(i, j))
             }
         }
-        mesh.draw(pixelWriter, camera)
+        mesh.draw(pixelWriter, image.width.toFloat(), image.height.toFloat(), camera)
         image = outputImage
     }
 

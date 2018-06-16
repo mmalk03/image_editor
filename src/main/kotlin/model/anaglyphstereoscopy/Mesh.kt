@@ -2,6 +2,7 @@ package model.anaglyphstereoscopy
 
 import com.curiouscreature.kotlin.math.*
 import javafx.scene.image.PixelWriter
+import javafx.scene.paint.Color
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -80,9 +81,17 @@ abstract class Mesh {
         }
     }
 
-    fun draw(pixelWriter: PixelWriter, camera: Camera) {
+    fun draw(pixelWriter: PixelWriter, imageWidth: Float, imageHeight: Float, camera: Camera) {
         // pixelWriter.setColor(coordinate.x, coordinate.y, color)
+        val cameraMatrix = getCameraMatrix(camera)
+        val projectionMatrix = getProjectionMatrix(90f, imageWidth, imageHeight)
+        val smth = tuples.map { cameraMatrix * it.n }
+        val smthn = smth.map { projectionMatrix * it }
+        val something = smthn.map { it / it.w }
 
+        val color = Color.color(0.0, 0.0, 0.0)
+        something.filter { it.x >= 0 && it.x < imageWidth && it.y >= 0 && it.y < imageHeight }
+                .forEach { pixelWriter.setColor(it.x.toInt(), it.y.toInt(), color) }
     }
 
     protected lateinit var tuples: Array<Vertex>

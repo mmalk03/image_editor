@@ -39,5 +39,6 @@ class MainModule : KotlinModule() {
         bind<IClippingViewModel>().to<ClippingViewModel>()
         bind<IFillingViewModel>().to<FillingViewModel>()
         bind<IFloodFillingViewModel>().to<FloodFillingViewModel>()
+        bind<IAnaglyphStereoscopyViewModel>().to<AnaglyphStereoscopyViewModel>()
     }
 }

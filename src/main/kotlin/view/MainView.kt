@@ -18,6 +18,7 @@ class MainView : View() {
     private val clippingViewModel: IClippingViewModel by di()
     private val fillingViewModel: IFillingViewModel by di()
     private val floodFillingViewModel: IFloodFillingViewModel by di()
+    private val anaglyphStereoscopyViewModel: IAnaglyphStereoscopyViewModel by di()
     private val imageService: ImageService by di()
 
     override val root = borderpane {
@@ -119,6 +120,16 @@ class MainView : View() {
                         }
                     }
                 }
+                tab("Anaglyph stereoscopy", VBox()) {
+                    scrollpane {
+                        imageview {
+                            imageProperty().bind(anaglyphStereoscopyViewModel.imageProperty)
+                            setOnMouseClicked {
+                                anaglyphStereoscopyViewModel.onMouseClick(it)
+                            }
+                        }
+                    }
+                }
             }
         }
         left {
@@ -209,6 +220,62 @@ class MainView : View() {
                             combobox(floodFillingViewModel.thresholdProperty, floodFillingViewModel.thresholdsProperty) {
                                 setOnAction {
                                     floodFillingViewModel.commit()
+                                }
+                            }
+                        }
+                    }
+                }
+                item("Anaglyph stereoscopy") {
+                    vbox {
+                        squeezebox {
+                            fold("Shape", expanded = false) {
+                                label("Shape")
+                                combobox(anaglyphStereoscopyViewModel.shapeProperty, anaglyphStereoscopyViewModel.shapesProperty) {
+                                    setOnAction {
+                                        anaglyphStereoscopyViewModel.commit()
+                                    }
+                                }
+                                label("Mesh density")
+                                combobox(anaglyphStereoscopyViewModel.meshDensityProperty, anaglyphStereoscopyViewModel.meshDensitiesProperty) {
+                                    setOnAction {
+                                        anaglyphStereoscopyViewModel.commit()
+                                    }
+                                }
+                            }
+                        }
+                        squeezebox {
+                            fold("Cone/cylinder", expanded = true) {
+                                label("Base radius")
+                                combobox(anaglyphStereoscopyViewModel.cRadiusProperty, anaglyphStereoscopyViewModel.cRadiusesProperty) {
+                                    setOnAction {
+                                        anaglyphStereoscopyViewModel.commit()
+                                    }
+                                }
+                                label("Height")
+                                combobox(anaglyphStereoscopyViewModel.cHeightProperty, anaglyphStereoscopyViewModel.cHeightsProperty) {
+                                    setOnAction {
+                                        anaglyphStereoscopyViewModel.commit()
+                                    }
+                                }
+                            }
+                        }
+                        squeezebox {
+                            fold("Sphere", expanded = false) {
+                                label("Radius")
+                                combobox(anaglyphStereoscopyViewModel.sphereRadiusProperty, anaglyphStereoscopyViewModel.sphereRadiusesProperty) {
+                                    setOnAction {
+                                        anaglyphStereoscopyViewModel.commit()
+                                    }
+                                }
+                            }
+                        }
+                        squeezebox {
+                            fold("Cuboid", expanded = false) {
+                                label("Edge length")
+                                combobox(anaglyphStereoscopyViewModel.cuboidEdgeLengthProperty, anaglyphStereoscopyViewModel.cuboidEdgeLengthsProperty) {
+                                    setOnAction {
+                                        anaglyphStereoscopyViewModel.commit()
+                                    }
                                 }
                             }
                         }

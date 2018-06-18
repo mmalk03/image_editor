@@ -26,6 +26,7 @@ class MainModule : KotlinModule() {
         bind<ImageService>().to<ImageFileChooserService>().`in`<Singleton>()
         bind<GrayscaleFilterStrategy>().to<ScientificGrayscaleFilterStrategy>()
         bind<LineStrategy>().to<SymmetricBresenhamLineStrategy>()
+        bind<OptimalLineStrategy>().to<SymmetricBresenhamOptimalLineStrategy>()
         bind<ClippingStrategy>().to<CoherSutherlandClippingStrategy>()
         bind<FillingStrategy>().to<ActiveEdgeTableFillingStrategy>()
         bind<CircleStrategy>().to<MidpointCircleStrategy>()

@@ -24,7 +24,7 @@ class AnaglyphStereoscopyModel {
     val imageProperty = SimpleObjectProperty<Image>()
     private var image by imageProperty
 
-    val shapeProperty = SimpleStringProperty(shapes.first())
+    val shapeProperty = SimpleStringProperty(shapes.last())
     private var shape by shapeProperty
     val cRadiusProperty = SimpleIntegerProperty(cRadiuses.first())
     private var cRadius by cRadiusProperty
@@ -32,7 +32,7 @@ class AnaglyphStereoscopyModel {
     private var cHeight by cHeightProperty
     val sphereRadiusProperty = SimpleIntegerProperty(sphereRadiuses.first())
     private var sphereRadius by sphereRadiusProperty
-    val cuboidEdgeLengthProperty = SimpleIntegerProperty(cuboidEdgeLengths.first())
+    val cuboidEdgeLengthProperty = SimpleIntegerProperty(cuboidEdgeLengths.last())
     private var cuboidEdgeLength by cuboidEdgeLengthProperty
     val meshDensityProperty = SimpleIntegerProperty(meshDensities.first())
     private var meshDensity by meshDensityProperty
@@ -52,11 +52,10 @@ class AnaglyphStereoscopyModel {
 
     private fun drawObject(mesh: Mesh) {
         val camera = Camera(
-                Float3(image.width.toFloat(), image.height.toFloat(), 100f),
-                Float3(image.width.toFloat(), image.height.toFloat(), 0f),
-//                Float3(0f, 0f, 10f),
-//                Float3(0f, 0f, 0f),
-                Float3(10f, 5f, 0f)
+                Float3(image.width.toFloat() / 2f, image.height.toFloat() / 2f, 210f),
+                Float3(0f, 0f, 0f),
+//                Float3(image.width.toFloat() / 2f, image.height.toFloat() / 2f, 0f),
+                Float3(0f, 1f, 0f)
         )
         val outputImage = WritableImage(image.width.toInt(), image.height.toInt())
         val pixelWriter = outputImage.pixelWriter

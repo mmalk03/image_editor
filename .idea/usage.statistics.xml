@@ -4,28 +4,30 @@
     <session id="1225830995">
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+          <entry key="class" value="1" />
           <entry key="gradle" value="3" />
           <entry key="java" value="1" />
-          <entry key="kt" value="8" />
+          <entry key="kt" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
+          <entry key="CLASS" value="1" />
           <entry key="Groovy" value="3" />
           <entry key="JAVA" value="1" />
-          <entry key="Kotlin" value="8" />
+          <entry key="Kotlin" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gradle" value="70" />
-          <entry key="kt" value="3162" />
+          <entry key="kt" value="4085" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="70" />
-          <entry key="Kotlin" value="3162" />
+          <entry key="Kotlin" value="4085" />
         </counts>
       </usages-collector>
     </session>

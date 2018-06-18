@@ -5,6 +5,7 @@ import javafx.scene.image.PixelWriter
 import javafx.scene.paint.Color
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.tan
 
 abstract class Mesh {
 
@@ -58,44 +59,53 @@ abstract class Mesh {
             val productZX = cross(cZ, cX)
             val cY = productZX / length(productZX)
 
-            return Mat4(
+            return transpose(Mat4(
                     Float4(cX.x, cX.y, cX.z, dot(cX, camera.position)),
                     Float4(cY.x, cY.y, cY.z, dot(cY, camera.position)),
                     Float4(cZ.x, cZ.y, cZ.z, dot(cZ, camera.position)),
                     Float4(0f, 0f, 0f, 1f)
-            )
+            ))
         }
 
         fun getProjectionMatrix(theta: Float, sX: Float, sY: Float): Mat4 {
-            //TODO: Mat[1, 1] has alpha in the original formula (here theta was used)
-            return Mat4(
+            return transpose(Mat4(
                     Float4((sX / 2f) * cot(theta / 2f), 0f, -sX / 2f, 0f),
-                    Float4(0f, (-sX / 2f) * (cot(theta / 2f) / theta), -sY / 2f, 0f),
+                    Float4(0f, (-sY / 2f) * cot(theta / 2f), -sY / 2f, 0f),
                     Float4(0f, 0f, 0f, -1f),
                     Float4(0f, 0f, -1f, 0f)
-            )
+            ))
         }
 
-        private fun cot(tan: Float): Float {
-            return 1f / tan
+        private fun cot(f: Float): Float {
+            return 1f / tan(f)
         }
     }
 
-    fun draw(pixelWriter: PixelWriter, imageWidth: Float, imageHeight: Float, camera: Camera) {
-        // pixelWriter.setColor(coordinate.x, coordinate.y, color)
-        val cameraMatrix = getCameraMatrix(camera)
-        val projectionMatrix = getProjectionMatrix(90f, imageWidth, imageHeight)
-        val smth = tuples.map { cameraMatrix * it.n }
-        val smthn = smth.map { projectionMatrix * it }
-        val something = smthn.map { it / it.w }
+    private val blackColor = Color.color(0.0, 0.0, 0.0)!!
 
-        val color = Color.color(0.0, 0.0, 0.0)
-        something.filter { it.x >= 0 && it.x < imageWidth && it.y >= 0 && it.y < imageHeight }
-                .forEach { pixelWriter.setColor(it.x.toInt(), it.y.toInt(), color) }
-    }
-
-    protected lateinit var tuples: Array<Vertex>
+    protected lateinit var tuples: Array<Float4>
     protected lateinit var position: Float3
     protected lateinit var rotation: Float3
 
+    fun draw(pixelWriter: PixelWriter, imageWidth: Float, imageHeight: Float, camera: Camera) {
+        val cameraMatrix = getCameraMatrix(camera)
+        val projectionMatrix = getProjectionMatrix(90f, imageWidth, imageHeight)
+//        val transformMatrix = cameraMatrix * projectionMatrix
+
+        for (t in tuples) {
+            val pointInCameraCoord = cameraMatrix * t
+            val point = projectionMatrix * pointInCameraCoord
+            point.transform { fl -> fl / point.w }
+            if (point.x >= 0 && point.x < imageWidth && point.y >= 0 && point.y < imageHeight) {
+                pixelWriter.setColor(point.x.toInt(), point.y.toInt(), blackColor)
+            }
+        }
+//        for (t in tuples) {
+//            val point = transformMatrix * t
+//            point.transform { fl -> fl / point.w }
+//            if (point.x >= 0 && point.x < imageWidth && point.y >= 0 && point.y < imageHeight) {
+//                pixelWriter.setColor(point.x.toInt(), point.y.toInt(), blackColor)
+//            }
+//        }
+    }
 }

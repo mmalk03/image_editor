@@ -225,10 +225,10 @@ class MainView : View() {
                         }
                     }
                 }
-                item("Anaglyph stereoscopy") {
+                item("Anaglyph stereoscopy", expanded = true) {
                     vbox {
                         squeezebox {
-                            fold("Shape", expanded = false) {
+                            fold("Shape", expanded = true) {
                                 label("Shape")
                                 combobox(anaglyphStereoscopyViewModel.shapeProperty, anaglyphStereoscopyViewModel.shapesProperty) {
                                     setOnAction {
@@ -244,7 +244,7 @@ class MainView : View() {
                             }
                         }
                         squeezebox {
-                            fold("Cone/cylinder", expanded = true) {
+                            fold("Cone/cylinder", expanded = false) {
                                 label("Base radius")
                                 combobox(anaglyphStereoscopyViewModel.cRadiusProperty, anaglyphStereoscopyViewModel.cRadiusesProperty) {
                                     setOnAction {
@@ -270,7 +270,7 @@ class MainView : View() {
                             }
                         }
                         squeezebox {
-                            fold("Cuboid", expanded = false) {
+                            fold("Cuboid", expanded = true) {
                                 label("Edge length")
                                 combobox(anaglyphStereoscopyViewModel.cuboidEdgeLengthProperty, anaglyphStereoscopyViewModel.cuboidEdgeLengthsProperty) {
                                     setOnAction {

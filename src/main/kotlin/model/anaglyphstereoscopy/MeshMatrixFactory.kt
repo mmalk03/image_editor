@@ -7,6 +7,11 @@ import kotlin.math.tan
 
 class MeshMatrixFactory {
 
+    //distance between the eyes in mm
+    private val e = 50f
+    //physical distance to the screen in px
+    private val d = 100f
+
     fun getRotationMatrixX(alpha: Float): Mat4 {
         val sinAlpha = sin(alpha)
         val cosAlpha = cos(alpha)
@@ -65,9 +70,33 @@ class MeshMatrixFactory {
     }
 
     fun getProjectionMatrix(theta: Float, sX: Float, sY: Float): Mat4 {
+//        return transpose(Mat4(
+//                Float4((sX / 2f) * cot(theta / 2f), 0f, -sX / 2f, 0f),
+//                Float4(0f, (-sY / 2f) * cot(theta / 2f), -sY / 2f, 0f),
+//                Float4(0f, 0f, 0f, -1f),
+//                Float4(0f, 0f, -1f, 0f)
+//        ))
         return transpose(Mat4(
-                Float4((sX / 2f) * cot(theta / 2f), 0f, -sX / 2f, 0f),
-                Float4(0f, (-sY / 2f) * cot(theta / 2f), -sY / 2f, 0f),
+                Float4(d, 0f, -sX / 2f, 0f),
+                Float4(0f, d, -sY / 2f, 0f),
+                Float4(0f, 0f, 0f, -1f),
+                Float4(0f, 0f, -1f, 0f)
+        ))
+    }
+
+    fun getStereoscopyLeftProjectionMatrix(cX: Float, cY: Float): Mat4 {
+        return transpose(Mat4(
+                Float4(d, 0f, -cX / 2f, d * e / 2),
+                Float4(0f, d, -cY / 2f, 0f),
+                Float4(0f, 0f, 0f, -1f),
+                Float4(0f, 0f, -1f, 0f)
+        ))
+    }
+
+    fun getStereoscopyRightProjectionMatrix(cX: Float, cY: Float): Mat4 {
+        return transpose(Mat4(
+                Float4(d, 0f, -cX / 2f, -d * e / 2),
+                Float4(0f, d, -cY / 2f, 0f),
                 Float4(0f, 0f, 0f, -1f),
                 Float4(0f, 0f, -1f, 0f)
         ))

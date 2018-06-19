@@ -1,11 +1,12 @@
-package model.anaglyphstereoscopy
+package model.anaglyphstereoscopy.mesh
 
 import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Mat4
 import javafx.scene.image.PixelWriter
+import javafx.scene.paint.Color
+import model.anaglyphstereoscopy.LineDrawer
 
 abstract class Mesh {
-    //    abstract val vertices: Array<Float4>
     var position = Float3(0f, 0f, 0f)
     var rotation = Float3(0f, 0f, 0f)
 
@@ -22,5 +23,5 @@ abstract class Mesh {
     }
 
     abstract fun draw(mappingMatrix: Mat4, transformMatrix: Mat4, pixelWriter: PixelWriter,
-                      lineDrawer: LineDrawer, imageWidth: Float, imageHeight: Float)
+                      lineDrawer: LineDrawer, imageWidth: Float, imageHeight: Float, color: Color)
 }

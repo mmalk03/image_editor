@@ -5,19 +5,41 @@ import com.curiouscreature.kotlin.math.Mat4
 import com.google.inject.Inject
 import javafx.scene.image.PixelWriter
 import javafx.scene.paint.Color
+import model.anaglyphstereoscopy.mesh.Mesh
 import model.canvas.linedrawing.OptimalLineStrategy
 
 class MeshDrawingService @Inject constructor(private val meshMatrixFactory: MeshMatrixFactory,
                                              private val optimalLineStrategy: OptimalLineStrategy) : LineDrawer {
 
+    private val blackColor = Color.color(0.0, 0.0, 0.0)
+    private val redColor = Color.color(1.0, 0.0, 0.0)
+    private val cyanColor = Color.color(0.0, 1.0, 1.0)
+
     fun draw(mesh: Mesh, pixelWriter: PixelWriter, imageWidth: Float, imageHeight: Float, camera: Camera) {
-        val mappingMatrix = getMappingMatrix(camera, imageWidth, imageHeight)
         val transformMatrix = getTransformMatrix(mesh)
-        mesh.draw(mappingMatrix, transformMatrix, pixelWriter, this, imageWidth, imageHeight)
+
+        val mappingMatrix = getMappingMatrix(camera, imageWidth, imageHeight)
+        mesh.draw(mappingMatrix, transformMatrix, pixelWriter, this, imageWidth, imageHeight, blackColor)
+
+        val stereoscopyLeftMappingMatrix = getStereoscopyLeftMappingMatrix(camera, imageWidth, imageHeight)
+        mesh.draw(stereoscopyLeftMappingMatrix, transformMatrix, pixelWriter, this, imageWidth, imageHeight, cyanColor)
+
+        val stereoscopyRightMappingMatrix = getStereoscopyRightMappingMatrix(camera, imageWidth, imageHeight)
+        mesh.draw(stereoscopyRightMappingMatrix, transformMatrix, pixelWriter, this, imageWidth, imageHeight, redColor)
     }
 
     private fun getMappingMatrix(camera: Camera, imageWidth: Float, imageHeight: Float): Mat4 {
         return meshMatrixFactory.getProjectionMatrix(90f, imageWidth, imageHeight) *
+                meshMatrixFactory.getCameraMatrix(camera)
+    }
+
+    private fun getStereoscopyLeftMappingMatrix(camera: Camera, imageWidth: Float, imageHeight: Float): Mat4 {
+        return meshMatrixFactory.getStereoscopyLeftProjectionMatrix(imageWidth, imageHeight) *
+                meshMatrixFactory.getCameraMatrix(camera)
+    }
+
+    private fun getStereoscopyRightMappingMatrix(camera: Camera, imageWidth: Float, imageHeight: Float): Mat4 {
+        return meshMatrixFactory.getStereoscopyRightProjectionMatrix(imageWidth, imageHeight) *
                 meshMatrixFactory.getCameraMatrix(camera)
     }
 

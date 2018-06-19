@@ -8,6 +8,7 @@ import javafx.scene.image.Image
 import javafx.scene.image.PixelWriter
 import javafx.scene.image.WritableImage
 import javafx.scene.paint.Color
+import model.anaglyphstereoscopy.mesh.*
 import model.canvas.Coordinate
 import service.BigBlankImageService
 import tornadofx.*

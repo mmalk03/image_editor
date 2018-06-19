@@ -1,11 +1,11 @@
-package model.anaglyphstereoscopy
+package model.anaglyphstereoscopy.mesh
 
 import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Float4
 import com.curiouscreature.kotlin.math.Mat4
 import javafx.scene.image.PixelWriter
 import javafx.scene.paint.Color
-import java.util.*
+import model.anaglyphstereoscopy.LineDrawer
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -44,9 +44,8 @@ class CylinderMesh(radius: Float, height: Float, private val n: Int, initPositio
         }
     }
 
-    override fun draw(mappingMatrix: Mat4, transformMatrix: Mat4, pixelWriter: PixelWriter, lineDrawer: LineDrawer, imageWidth: Float, imageHeight: Float) {
-        val random = Random()
-        val color = Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble())
+    override fun draw(mappingMatrix: Mat4, transformMatrix: Mat4, pixelWriter: PixelWriter,
+                      lineDrawer: LineDrawer, imageWidth: Float, imageHeight: Float, color: Color) {
         //map to 2D space
         val vs = vertices.map { transformMatrix * mappingMatrix * it!! }.map { it / it.w }
 

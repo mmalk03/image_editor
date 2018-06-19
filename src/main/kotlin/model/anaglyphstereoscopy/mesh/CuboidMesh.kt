@@ -1,11 +1,11 @@
-package model.anaglyphstereoscopy
+package model.anaglyphstereoscopy.mesh
 
 import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Float4
 import com.curiouscreature.kotlin.math.Mat4
 import javafx.scene.image.PixelWriter
 import javafx.scene.paint.Color
-import java.util.*
+import model.anaglyphstereoscopy.LineDrawer
 
 class CuboidMesh(dimensions: Float3, initPosition: Float3) : Mesh() {
     private val vertices: Array<Float4>
@@ -46,9 +46,7 @@ class CuboidMesh(dimensions: Float3, initPosition: Float3) : Mesh() {
     }
 
     override fun draw(mappingMatrix: Mat4, transformMatrix: Mat4, pixelWriter: PixelWriter,
-                      lineDrawer: LineDrawer, imageWidth: Float, imageHeight: Float) {
-        val random = Random()
-        val color = Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble())
+                      lineDrawer: LineDrawer, imageWidth: Float, imageHeight: Float, color: Color) {
         var v1 = Float4(0f, 0f, 0f, 1f)
         var v2 = Float4(0f, 0f, 0f, 1f)
         var v3 = Float4(0f, 0f, 0f, 1f)

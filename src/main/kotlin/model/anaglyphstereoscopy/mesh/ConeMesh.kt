@@ -1,26 +1,25 @@
-package model.anaglyphstereoscopy
+package model.anaglyphstereoscopy.mesh
 
 import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Float4
 import com.curiouscreature.kotlin.math.Mat4
 import javafx.scene.image.PixelWriter
 import javafx.scene.paint.Color
-import java.util.*
+import model.anaglyphstereoscopy.LineDrawer
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
 class ConeMesh(radius: Float, height: Float, private val n: Int, initPosition: Float3) : Mesh() {
 
-    private val vertices: Array<Float4?>
+    private val vertices = arrayOfNulls<Float4>(n + 2)
 
     init {
         position = Float3(initPosition.x, initPosition.y, initPosition.z)
-        vertices = arrayOfNulls(n + 2)
         //base centre
         vertices[0] = Float4(0f, 0f, 0f, 1f)
         //top vertex
-        vertices[n + 1] = Float4(0f, -height, 0f, 1f)
+        vertices[n + 1] = Float4(0f, height, 0f, 1f)
         //base perimeter vertices
         (1 until n + 1).forEach {
             vertices[it] = Float4(
@@ -31,9 +30,8 @@ class ConeMesh(radius: Float, height: Float, private val n: Int, initPosition: F
         }
     }
 
-    override fun draw(mappingMatrix: Mat4, transformMatrix: Mat4, pixelWriter: PixelWriter, lineDrawer: LineDrawer, imageWidth: Float, imageHeight: Float) {
-        val random = Random()
-        val color = Color.color(random.nextDouble(), random.nextDouble(), random.nextDouble())
+    override fun draw(mappingMatrix: Mat4, transformMatrix: Mat4, pixelWriter: PixelWriter,
+                      lineDrawer: LineDrawer, imageWidth: Float, imageHeight: Float, color: Color) {
         //map to 2D space
         val vs = vertices.map { transformMatrix * mappingMatrix * it!! }.map { it / it.w }
 

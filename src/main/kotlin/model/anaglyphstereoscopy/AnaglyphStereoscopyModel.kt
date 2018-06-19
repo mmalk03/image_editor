@@ -145,8 +145,9 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
                 Float3(x.toFloat() - image.width.toFloat() / 2f, y.toFloat() - image.height.toFloat() / 2f, 0f))
     }
 
-    private fun getConeMesh(x: Int, y: Int): CuboidMesh {
-        return getCuboidMesh(x, y)
+    private fun getConeMesh(x: Int, y: Int): ConeMesh {
+        return ConeMesh(cRadius.toFloat(), cHeight.toFloat(), meshDensity,
+                Float3(x.toFloat() - image.width.toFloat() / 2f, y.toFloat() - image.height.toFloat() / 2f, 0f))
     }
 
     private fun getSphereMesh(x: Int, y: Int): SphereMesh {

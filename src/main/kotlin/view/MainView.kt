@@ -6,6 +6,7 @@ import events.ImageResetEvent
 import events.ImageSaveEvent
 import javafx.geometry.Orientation
 import javafx.scene.control.TabPane
+import javafx.scene.input.KeyCombination
 import javafx.scene.layout.VBox
 import service.ImageService
 import tornadofx.*
@@ -226,6 +227,24 @@ class MainView : View() {
                     }
                 }
                 item("Anaglyph stereoscopy", expanded = true) {
+                    shortcut(KeyCombination.valueOf("LEFT")) {
+                        anaglyphStereoscopyViewModel.onLeftClick()
+                    }
+                    shortcut(KeyCombination.valueOf("RIGHT")) {
+                        anaglyphStereoscopyViewModel.onRightClick()
+                    }
+                    shortcut(KeyCombination.valueOf("UP")) {
+                        anaglyphStereoscopyViewModel.onUpClick()
+                    }
+                    shortcut(KeyCombination.valueOf("DOWN")) {
+                        anaglyphStereoscopyViewModel.onDownClick()
+                    }
+                    shortcut(KeyCombination.valueOf("SLASH")) {
+                        anaglyphStereoscopyViewModel.onForwardClick()
+                    }
+                    shortcut(KeyCombination.valueOf("MINUS")) {
+                        anaglyphStereoscopyViewModel.onBackwardClick()
+                    }
                     vbox {
                         squeezebox {
                             fold("Shape", expanded = true) {

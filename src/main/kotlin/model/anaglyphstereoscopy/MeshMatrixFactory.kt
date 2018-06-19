@@ -10,31 +10,31 @@ class MeshMatrixFactory {
     fun getRotationMatrixX(alpha: Float): Mat4 {
         val sinAlpha = sin(alpha)
         val cosAlpha = cos(alpha)
-        return transpose(Mat4(
+        return Mat4(
                 Float4(1f, 0f, 0f, 0f),
                 Float4(0f, cosAlpha, -sinAlpha, 0f),
                 Float4(0f, sinAlpha, cosAlpha, 0f),
-                Float4(0f, 0f, 0f, 1f)))
+                Float4(0f, 0f, 0f, 1f))
     }
 
     fun getRotationMatrixY(alpha: Float): Mat4 {
         val sinAlpha = sin(alpha)
         val cosAlpha = cos(alpha)
-        return transpose(Mat4(
+        return Mat4(
                 Float4(cosAlpha, 0f, sinAlpha, 0f),
                 Float4(0f, 1f, 0f, 0f),
                 Float4(-sinAlpha, 0f, cosAlpha, 0f),
-                Float4(0f, 0f, 0f, 1f)))
+                Float4(0f, 0f, 0f, 1f))
     }
 
     fun getRotationMatrixZ(alpha: Float): Mat4 {
         val sinAlpha = sin(alpha)
         val cosAlpha = cos(alpha)
-        return transpose(Mat4(
+        return Mat4(
                 Float4(cosAlpha, -sinAlpha, 0f, 0f),
                 Float4(sinAlpha, cosAlpha, 0f, 0f),
                 Float4(0f, 0f, 1f, 0f),
-                Float4(0f, 0f, 0f, 1f)))
+                Float4(0f, 0f, 0f, 1f))
     }
 
     fun getTranslationMatrix(v: Float3): Mat4 {

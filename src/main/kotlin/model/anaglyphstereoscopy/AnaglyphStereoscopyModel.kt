@@ -13,13 +13,14 @@ import service.BigBlankImageService
 import tornadofx.*
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingService: MeshDrawingService) {
     val shapes = listOf("Cylinder", "Cone", "Sphere", "Cuboid")
     val cRadiuses = listOf(10, 20, 40, 80)
     val cHeights = listOf(10, 20, 40, 80)
     val sphereRadiuses = listOf(10, 20, 40, 80)
-    val cuboidEdgeLengths = listOf(80, 160, 320, 640)
+    val cuboidEdgeLengths = listOf(80, 160, 240, 320)
     val meshDensities = listOf(10, 20, 40, 80)
 
     private var originalImage: Image? = null
@@ -41,15 +42,21 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
     val meshDensityProperty = SimpleIntegerProperty(meshDensities.first())
     private var meshDensity by meshDensityProperty
 
-    private val meshes = ArrayList<Mesh>()
+    private val meshes = HashMap<Mesh, Pair<Float3, Float3>>()
     private val camera: Camera
     private val whiteColor = Color.color(1.0, 1.0, 1.0)
+    private val random = Random()
+    private val maxTranslation = 0f
+    private val minTranslation = 0f
+    private val maxRotation = 0f
+    private val minRotation = 0f
+    private val drawingDelay = 10L
+    private val cameraMovement = 20f
 
     init {
         bigBlankImageService.loadImage()
         camera = Camera(
-                Float3(105f, 210f, 420f),
-//                Float3(420f, 0f, 105f),
+                Float3(0f, 0f, 0f),
                 Float3(0f, 0f, 0f),
                 Float3(0f, 1f, 0f)
         )
@@ -67,12 +74,19 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
                 }
                 synchronized(meshes) {
                     for (m in meshes) {
-                        m.position = Float3(m.position.x + 1f, m.position.y + 2f, m.position.z + 3f)
-                        drawObject(m, pixelWriter)
+                        if (m.key.position.x < -image.width / 2 || m.key.position.x > image.width / 2) {
+                            m.value.first.x *= -1
+                        }
+                        if (m.key.position.y < -image.height / 2 || m.key.position.y > image.height / 2) {
+                            m.value.first.y *= -1
+                        }
+                        m.key.moveBy(m.value.first)
+                        m.key.rotateBy(m.value.second)
+                        drawObject(m.key, pixelWriter)
                     }
                 }
                 image = outputImage
-                Thread.sleep(1000)
+                Thread.sleep(drawingDelay)
             }
         }).start()
     }
@@ -88,8 +102,32 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
             }
         }
         synchronized(meshes) {
-            meshes.add(mesh)
+            meshes.put(mesh, Pair(getRandomTranslationVector(), getRandomRotationVector()))
         }
+    }
+
+    fun onLeftClick() {
+        synchronized(camera) { camera.position.x -= cameraMovement }
+    }
+
+    fun onRightClick() {
+        synchronized(camera) { camera.position.x += cameraMovement }
+    }
+
+    fun onUpClick() {
+        synchronized(camera) { camera.position.y += cameraMovement }
+    }
+
+    fun onDownClick() {
+        synchronized(camera) { camera.position.y -= cameraMovement }
+    }
+
+    fun onForwardClick() {
+        synchronized(camera) { camera.position.z -= cameraMovement }
+    }
+
+    fun onBackwardClick() {
+        synchronized(camera) { camera.position.z += cameraMovement }
     }
 
     private fun drawObject(mesh: Mesh, pixelWriter: PixelWriter) {
@@ -102,8 +140,9 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
                 Float3(x.toFloat() - image.width.toFloat() / 2f, y.toFloat() - image.height.toFloat() / 2f, 0f))
     }
 
-    private fun getCylinderMesh(x: Int, y: Int): CuboidMesh {
-        return getCuboidMesh(x, y)
+    private fun getCylinderMesh(x: Int, y: Int): CylinderMesh {
+        return CylinderMesh(cRadius.toFloat(), cHeight.toFloat(), meshDensity,
+                Float3(x.toFloat() - image.width.toFloat() / 2f, y.toFloat() - image.height.toFloat() / 2f, 0f))
     }
 
     private fun getConeMesh(x: Int, y: Int): CuboidMesh {
@@ -112,6 +151,20 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
 
     private fun getSphereMesh(x: Int, y: Int): CuboidMesh {
         return getCuboidMesh(x, y)
+    }
+
+    private fun getRandomTranslationVector(): Float3 {
+        return Float3(
+                random.nextFloat() * (maxTranslation - minTranslation) + minTranslation,
+                random.nextFloat() * (maxTranslation - minTranslation) + minTranslation,
+                random.nextFloat() * (maxTranslation - minTranslation) + minTranslation)
+    }
+
+    private fun getRandomRotationVector(): Float3 {
+        return Float3(
+                random.nextFloat() * (maxRotation - minRotation) + minRotation,
+                random.nextFloat() * (maxRotation - minRotation) + minRotation,
+                random.nextFloat() * (maxRotation - minRotation) + minRotation)
     }
 
     fun onOpenImage(openedImage: Image) {

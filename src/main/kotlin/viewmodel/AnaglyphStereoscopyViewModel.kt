@@ -27,10 +27,39 @@ abstract class IAnaglyphStereoscopyViewModel : MyViewModel() {
     abstract val meshDensitiesProperty: ObservableList<Int>
 
     abstract fun onMouseClick(event: MouseEvent)
+    abstract fun onLeftClick()
+    abstract fun onRightClick()
+    abstract fun onUpClick()
+    abstract fun onDownClick()
+    abstract fun onForwardClick()
+    abstract fun onBackwardClick()
 }
 
 class AnaglyphStereoscopyViewModel @Inject constructor(private val imageService: ImageService,
                                                        private val anaglyphStereoscopyModel: AnaglyphStereoscopyModel) : IAnaglyphStereoscopyViewModel() {
+    override fun onLeftClick() {
+        anaglyphStereoscopyModel.onLeftClick()
+    }
+
+    override fun onRightClick() {
+        anaglyphStereoscopyModel.onRightClick()
+    }
+
+    override fun onUpClick() {
+        anaglyphStereoscopyModel.onUpClick()
+    }
+
+    override fun onDownClick() {
+        anaglyphStereoscopyModel.onDownClick()
+    }
+
+    override fun onForwardClick() {
+        anaglyphStereoscopyModel.onForwardClick()
+    }
+
+    override fun onBackwardClick() {
+        anaglyphStereoscopyModel.onBackwardClick()
+    }
 
     override val shapeProperty = bind { anaglyphStereoscopyModel.shapeProperty }
     override val shapesProperty = FXCollections.observableArrayList(anaglyphStereoscopyModel.shapes)!!

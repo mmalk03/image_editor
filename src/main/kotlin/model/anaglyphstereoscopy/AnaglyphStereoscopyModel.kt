@@ -17,11 +17,11 @@ import kotlin.collections.HashMap
 
 class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingService: MeshDrawingService) {
     val shapes = listOf("Cylinder", "Cone", "Sphere", "Cuboid")
-    val cRadiuses = listOf(10, 20, 40, 80)
-    val cHeights = listOf(10, 20, 40, 80)
-    val sphereRadiuses = listOf(10, 20, 40, 80)
+    val cRadiuses = listOf(40, 80, 160, 320)
+    val cHeights = listOf(40, 80, 160, 320)
+    val sphereRadiuses = listOf(40, 80, 160, 320)
     val cuboidEdgeLengths = listOf(80, 160, 240, 320)
-    val meshDensities = listOf(10, 20, 40, 80)
+    val meshDensities = listOf(10, 20, 40, 80, 160)
 
     private var originalImage: Image? = null
     private val bigBlankImageService = BigBlankImageService()
@@ -149,8 +149,9 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
         return getCuboidMesh(x, y)
     }
 
-    private fun getSphereMesh(x: Int, y: Int): CuboidMesh {
-        return getCuboidMesh(x, y)
+    private fun getSphereMesh(x: Int, y: Int): SphereMesh {
+        return SphereMesh(sphereRadius.toFloat(), meshDensity,
+                Float3(x.toFloat() - image.width.toFloat() / 2f, y.toFloat() - image.height.toFloat() / 2f, 0f))
     }
 
     private fun getRandomTranslationVector(): Float3 {

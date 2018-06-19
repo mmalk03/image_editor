@@ -23,7 +23,7 @@ class SphereMesh(r: Float, private val n: Int, initPosition: Float3) : Mesh() {
         //bottom pole
         vertices[m * n + 1] = Float4(0f, -r, 0f, 1f)
         //side
-        for (i in 1 until n + 1) {
+        for (i in 0 until n) {
             for (j in 1 until m + 1) {
                 vertices[i * m + j] = Float4(
                         (r * cos(((2 * PI) / m) * (j - 1)) * sin((PI / (n + 1)) * i)).toFloat(),

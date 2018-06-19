@@ -1,7 +1,6 @@
 package model.anaglyphstereoscopy
 
 import com.curiouscreature.kotlin.math.Float3
-import javafx.application.Platform
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
@@ -68,6 +67,7 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
                 }
                 synchronized(meshes) {
                     for (m in meshes) {
+                        m.position = Float3(m.position.x + 1f, m.position.y + 2f, m.position.z + 3f)
                         drawObject(m, pixelWriter)
                     }
                 }
@@ -79,17 +79,12 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
 
     fun addObject(coordinate: Coordinate) {
         val mesh = when (shape) {
-            "Cylinder" -> CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(),
-                    coordinate.x.toFloat() - image.width.toFloat() / 2f, coordinate.y.toFloat() - image.height.toFloat() / 2f)
-            "Cone" -> CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(),
-                    coordinate.x.toFloat() - image.width.toFloat() / 2f, coordinate.y.toFloat() - image.height.toFloat() / 2f)
-            "Sphere" -> CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(),
-                    coordinate.x.toFloat() - image.width.toFloat() / 2f, coordinate.y.toFloat() - image.height.toFloat() / 2f)
-            "Cuboid" -> CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(),
-                    coordinate.x.toFloat() - image.width.toFloat() / 2f, coordinate.y.toFloat() - image.height.toFloat() / 2f)
+            "Cylinder" -> getCylinderMesh(coordinate.x, coordinate.y)
+            "Cone" -> getConeMesh(coordinate.x, coordinate.y)
+            "Sphere" -> getSphereMesh(coordinate.x, coordinate.y)
+            "Cuboid" -> getCuboidMesh(coordinate.x, coordinate.y)
             else -> {
-                CuboidMesh(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(),
-                        coordinate.x.toFloat() - image.width.toFloat() / 2f, coordinate.y.toFloat() - image.height.toFloat() / 2f)
+                throw RuntimeException("Something went wrong")
             }
         }
         synchronized(meshes) {
@@ -99,6 +94,24 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
 
     private fun drawObject(mesh: Mesh, pixelWriter: PixelWriter) {
         meshDrawingService.draw(mesh, pixelWriter, image.width.toFloat(), image.height.toFloat(), camera)
+    }
+
+    private fun getCuboidMesh(x: Int, y: Int): CuboidMesh {
+        return CuboidMesh(
+                Float3(cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat(), cuboidEdgeLength.toFloat()),
+                Float3(x.toFloat() - image.width.toFloat() / 2f, y.toFloat() - image.height.toFloat() / 2f, 0f))
+    }
+
+    private fun getCylinderMesh(x: Int, y: Int): CuboidMesh {
+        return getCuboidMesh(x, y)
+    }
+
+    private fun getConeMesh(x: Int, y: Int): CuboidMesh {
+        return getCuboidMesh(x, y)
+    }
+
+    private fun getSphereMesh(x: Int, y: Int): CuboidMesh {
+        return getCuboidMesh(x, y)
     }
 
     fun onOpenImage(openedImage: Image) {

@@ -21,8 +21,8 @@ class MeshDrawingService @Inject constructor(private val meshMatrixFactory: Mesh
 
         val translationMatrix = meshMatrixFactory.getTranslationMatrix(mesh.position)
         val rotationXMatrix = meshMatrixFactory.getRotationMatrixX(mesh.rotation.x)
-        val rotationYMatrix = meshMatrixFactory.getRotationMatrixX(mesh.rotation.y)
-        val rotationZMatrix = meshMatrixFactory.getRotationMatrixX(mesh.rotation.z)
+        val rotationYMatrix = meshMatrixFactory.getRotationMatrixY(mesh.rotation.y)
+        val rotationZMatrix = meshMatrixFactory.getRotationMatrixZ(mesh.rotation.z)
         val transformMatrix = translationMatrix * rotationXMatrix * rotationYMatrix * rotationZMatrix
 
         var v1 = Float4(0f, 0f, 0f, 1f)

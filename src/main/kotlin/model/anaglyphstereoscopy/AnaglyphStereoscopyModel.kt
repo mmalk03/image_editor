@@ -30,13 +30,13 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
     val imageProperty = SimpleObjectProperty<Image>()
     private var image by imageProperty
 
-    val shapeProperty = SimpleStringProperty(shapes.last())
+    val shapeProperty = SimpleStringProperty(shapes.first())
     private var shape by shapeProperty
-    val cRadiusProperty = SimpleIntegerProperty(cRadiuses.first())
+    val cRadiusProperty = SimpleIntegerProperty(cRadiuses.last())
     private var cRadius by cRadiusProperty
-    val cHeightProperty = SimpleIntegerProperty(cHeights.first())
+    val cHeightProperty = SimpleIntegerProperty(cHeights.last())
     private var cHeight by cHeightProperty
-    val sphereRadiusProperty = SimpleIntegerProperty(sphereRadiuses.first())
+    val sphereRadiusProperty = SimpleIntegerProperty(sphereRadiuses.last())
     private var sphereRadius by sphereRadiusProperty
     val cuboidEdgeLengthProperty = SimpleIntegerProperty(cuboidEdgeLengths.last())
     private var cuboidEdgeLength by cuboidEdgeLengthProperty
@@ -48,7 +48,7 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
     private val whiteColor = Color.color(1.0, 1.0, 1.0)
     private val random = Random()
     private val maxTranslation = 0f
-    private val minTranslation = 0f
+    private val minTranslation = 3f
     private val maxRotation = 0f
     private val minRotation = 0f
     private val drawingDelay = 10L
@@ -132,7 +132,9 @@ class AnaglyphStereoscopyModel @Inject constructor(private val meshDrawingServic
     }
 
     private fun drawObject(mesh: Mesh, pixelWriter: PixelWriter) {
-        meshDrawingService.draw(mesh, pixelWriter, image.width.toFloat(), image.height.toFloat(), camera)
+        synchronized(camera) {
+            meshDrawingService.draw(mesh, pixelWriter, image.width.toFloat(), image.height.toFloat(), camera)
+        }
     }
 
     private fun getCuboidMesh(x: Int, y: Int): CuboidMesh {

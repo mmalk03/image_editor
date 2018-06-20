@@ -55,6 +55,8 @@ class CuboidMesh(dimensions: Float3, initPosition: Float3) : Mesh() {
 
             val point = transformMatrix * mappingMatrix * t
             point.transform { fl -> fl / point.w }
+//            point.x += imageWidth / 2
+//            point.y += imageHeight / 2
 
             when (index) {
                 1 -> v1 = point

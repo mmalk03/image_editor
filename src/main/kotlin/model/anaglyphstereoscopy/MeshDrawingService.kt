@@ -17,9 +17,9 @@ class MeshDrawingService @Inject constructor(private val meshMatrixFactory: Mesh
 
     fun draw(mesh: Mesh, pixelWriter: PixelWriter, imageWidth: Float, imageHeight: Float, camera: Camera) {
         val transformMatrix = getTransformMatrix(mesh)
-
-        val mappingMatrix = getMappingMatrix(camera, imageWidth, imageHeight)
-        mesh.draw(mappingMatrix, transformMatrix, pixelWriter, this, imageWidth, imageHeight, blackColor)
+//
+//        val mappingMatrix = getMappingMatrix(camera, imageWidth, imageHeight)
+//        mesh.draw(mappingMatrix, transformMatrix, pixelWriter, this, imageWidth, imageHeight, blackColor)
 
         val stereoscopyLeftMappingMatrix = getStereoscopyLeftMappingMatrix(camera, imageWidth, imageHeight)
         mesh.draw(stereoscopyLeftMappingMatrix, transformMatrix, pixelWriter, this, imageWidth, imageHeight, cyanColor)

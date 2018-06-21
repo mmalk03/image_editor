@@ -86,7 +86,7 @@ class MeshMatrixFactory {
 
     fun getStereoscopyLeftProjectionMatrix(cX: Float, cY: Float): Mat4 {
         return transpose(Mat4(
-                Float4(d, 0f, -cX / 2f, d * e / 2),
+                Float4(d, 0f, -cX / 2f, -d * e / 2),
                 Float4(0f, d, -cY / 2f, 0f),
                 Float4(0f, 0f, 0f, -1f),
                 Float4(0f, 0f, -1f, 0f)
@@ -95,7 +95,7 @@ class MeshMatrixFactory {
 
     fun getStereoscopyRightProjectionMatrix(cX: Float, cY: Float): Mat4 {
         return transpose(Mat4(
-                Float4(d, 0f, -cX / 2f, -d * e / 2),
+                Float4(d, 0f, -cX / 2f, d * e / 2),
                 Float4(0f, d, -cY / 2f, 0f),
                 Float4(0f, 0f, 0f, -1f),
                 Float4(0f, 0f, -1f, 0f)
